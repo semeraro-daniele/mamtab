@@ -1,0 +1,362 @@
+openapi: 3.0.3
+info:
+  title: GTFS Departures API
+  description: >
+    API per consultare fermate, linee e orari di partenza GTFS (Amtab).
+    Permette la ricerca per fermata, linea e direzione.
+  version: 2.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Dev server
+
+tags:
+  - name: Stops
+    description: Ricerca fermate e partenze
+  - name: Lines
+    description: Linee, fermate e orari
+  - name: Health
+    description: Healthcheck
+
+paths:
+  /stops/{query}:
+    get:
+      tags: [Stops]
+      summary: Ricerca fermate per nome o stop_id
+      parameters:
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stop ID o parte del nome fermata
+      responses:
+        "200":
+          description: Elenco fermate con prossime partenze
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StopsResponse"
+        "400":
+          description: Query non valida
+        "500":
+          description: Errore interno
+
+  /lines:
+    get:
+      tags: [Lines]
+      summary: Ottieni tutte le linee disponibili
+      responses:
+        "200":
+          description: Elenco linee
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinesResponse"
+        "500":
+          description: Errore interno
+
+  /lines/{line_id}:
+    get:
+      tags: [Lines]
+      summary: Fermate e struttura di una linea
+      parameters:
+        - name: line_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID o short name della linea
+      responses:
+        "200":
+          description: Dettaglio linea e fermate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LineResponse"
+        "400":
+          description: Parametro non valido
+        "500":
+          description: Errore interno
+
+  /lines/{line_id}/stops/{stop_id}/departures/{direction_id}:
+    get:
+      tags: [Lines]
+      summary: Orari di una linea da una fermata (oggi)
+      parameters:
+        - name: line_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stop_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: direction_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Orari di partenza
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StopLineDeparturesResponse"
+        "500":
+          description: Errore interno
+
+  /lines/{line_id}/stops/{stop_id}/departures/{direction_id}/{date}:
+    get:
+      tags: [Lines]
+      summary: Orari di una linea da una fermata per una data specifica
+      parameters:
+        - name: line_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stop_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: direction_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "2026-03-31"
+      responses:
+        "200":
+          description: Orari di partenza
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StopLineDeparturesResponse"
+        "500":
+          description: Errore interno
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Healthcheck database
+      responses:
+        "200":
+          description: Servizio disponibile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+        "503":
+          description: Servizio non disponibile
+
+components:
+  schemas:
+
+    # ==== STOPS ====
+
+    Departure:
+      type: object
+      properties:
+        stop_id:
+          type: string
+        stop_name:
+          type: string
+        linea:
+          type: string
+          nullable: true
+        percorso:
+          type: string
+          nullable: true
+        destinazione:
+          type: string
+          nullable: true
+        direction_id:
+          type: integer
+          nullable: true
+        orario_partenza:
+          type: string
+        tra:
+          type: string
+          nullable: true
+
+    Stop:
+      type: object
+      properties:
+        stop_id:
+          type: string
+        stop_name:
+          type: string
+        stop_code:
+          type: string
+          nullable: true
+        stop_lat:
+          type: number
+          format: double
+          nullable: true
+        stop_lon:
+          type: number
+          format: double
+          nullable: true
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/Departure"
+
+    StopsResponse:
+      type: object
+      properties:
+        query:
+          type: string
+        risultati:
+          type: integer
+        stops:
+          type: array
+          items:
+            $ref: "#/components/schemas/Stop"
+
+    # ==== LINES ====
+
+    LineDeparture:
+      type: object
+      properties:
+        trip_id:
+          type: string
+        trip_headsign:
+          type: string
+          nullable: true
+        orario_partenza:
+          type: string
+        tra:
+          type: string
+          nullable: true
+
+    StopLineDeparture:
+      type: object
+      properties:
+        trip_id:
+          type: string
+        trip_headsign:
+          type: string
+          nullable: true
+        orario_partenza:
+          type: string
+
+    StopLineDeparturesResponse:
+      type: object
+      properties:
+        stop_id:
+          type: string
+        stop_name:
+          type: string
+        stop_code:
+          type: string
+          nullable: true
+        route_id:
+          type: string
+        route_short_name:
+          type: string
+          nullable: true
+        route_long_name:
+          type: string
+          nullable: true
+        direction_id:
+          type: integer
+        direction_headsign:
+          type: string
+          nullable: true
+        departures:
+          type: array
+          items:
+            $ref: "#/components/schemas/StopLineDeparture"
+
+    LineStop:
+      type: object
+      properties:
+        stop_id:
+          type: string
+        stop_name:
+          type: string
+        stop_code:
+          type: string
+          nullable: true
+        stop_lat:
+          type: number
+          format: double
+          nullable: true
+        stop_lon:
+          type: number
+          format: double
+          nullable: true
+        stop_sequence:
+          type: integer
+        departures:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineDeparture"
+
+    LineDirection:
+      type: object
+      properties:
+        direction_id:
+          type: integer
+        headsign:
+          type: string
+          nullable: true
+        stops:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineStop"
+
+    LineResponse:
+      type: object
+      properties:
+        query:
+          type: string
+        risultati:
+          type: integer
+        route_id:
+          type: string
+        route_short_name:
+          type: string
+          nullable: true
+        route_long_name:
+          type: string
+          nullable: true
+        directions:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineDirection"
+
+    LineInfo:
+      type: object
+      properties:
+        route_id:
+          type: string
+        route_short_name:
+          type: string
+          nullable: true
+        route_long_name:
+          type: string
+          nullable: true
+
+    LinesResponse:
+      type: object
+      properties:
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineInfo"

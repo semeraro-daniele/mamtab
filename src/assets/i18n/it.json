@@ -1,0 +1,71 @@
+{
+  "app": {
+    "title": ""
+  },
+  "homepage": {
+    "welcome": "Benvenuto",
+    "chooseSearchType": "Scegli il tipo di ricerca:",
+    "searchByLine": "Cerca per linea",
+    "searchByStop": "Cerca per fermata",
+    "info": "Info"
+  },
+  "nav": {
+    "homepage": "Homepage",
+    "searchByStop": "Fermata",
+    "searchByLine": "Linea",
+    "listLines": "Elenco delle linee"
+  },
+  "search": {
+    "placeholder": "Nome o codice",
+    "linePlaceholder": "Linea",
+    "button": "Cerca",
+    "loading": "Caricamento in corso...",
+    "noStopResults": "Nessuna fermata trovata.",
+    "noLineResults": "Nessuna linea trovata.",
+    "availableLines": "Linee disponibili",
+    "recentSearches": "Ricerche recenti",
+    "clearHistory": "Cancella cronologia",
+    "direction": "Direzione {{num}}",
+    "viewAllDepartures": "Clicca per vedere tutti gli orari",
+    "allDeparturesForDay": "Tutti gli orari della giornata",
+    "departures": "partenze",
+    "noDeparturesFound": "Nessuna partenza trovata per questo giorno",
+    "noSchedulesAvailable": "Nessun orario disponibile per la data selezionata",
+    "infoStop": "Info",
+    "selectDate": "Seleziona data",
+    "filterStops": "Filtra fermate...",
+    "hideFilter": "Nascondi filtro",
+    "showingStops": "Mostrando {{count}} di {{total}} fermate",
+    "noStopsFound": "Nessuna fermata trovata con questo filtro",
+    "loadMore": "Carica altri"
+  },
+  "stop": {
+    "openInMaps": "Apri in Google Maps",
+    "codeLabel": "Codice:",
+    "noDepartures": "Nessuna partenza disponibile",
+    "collapsed": "{{count}} partenze - clicca per espandere",
+    "collapse": "Comprimi",
+    "expand": "Espandi"
+  },
+  "info": {
+    "title": "Info",
+    "description": "Mamtab è una web app che permette di esplorare linee, fermate e orari degli autobus di Bari utilizzando dati GTFS.",
+    "easterEgg": "Ora trova anche gli altri!"
+  },
+  "error-page": {
+    "404": "404",
+    "title": "Pagina non trovata",
+    "description": "La pagina che stai cercando non esiste o è stata spostata.",
+    "back-home": "Torna alla home"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Chiaro",
+    "dark": "Scuro"
+  },
+  "lang": {
+    "language": "Lingua",
+    "it": "Italiano",
+    "en": "Inglese"
+  }
+}

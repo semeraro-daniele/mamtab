@@ -1,0 +1,71 @@
+{
+  "app": {
+    "title": ""
+  },
+  "homepage": {
+    "welcome": "Welcome",
+    "chooseSearchType": "Choose the type of search:",
+    "searchByLine": "Search by line",
+    "searchByStop": "Search by stop",
+    "info": "Info"
+  },
+  "nav": {
+    "homepage": "Homepage",
+    "searchByStop": "Stop",
+    "searchByLine": "Line",
+    "listLines": "List of lines"
+  },
+  "search": {
+    "placeholder": "Name or code",
+    "linePlaceholder": "Line",
+    "button": "Search",
+    "loading": "Loading...",
+    "noStopResults": "No stops found.",
+    "noLineResults": "No lines found.",
+    "availableLines": "Available lines",
+    "recentSearches": "Recent searches",
+    "clearHistory": "Clear history",
+    "direction": "Direction {{num}}",
+    "viewAllDepartures": "Click to view all schedules",
+    "allDeparturesForDay": "All departures for the day",
+    "departures": "departures",
+    "noDeparturesFound": "No departures found for this day",
+    "noSchedulesAvailable": "No schedules available for the selected date",
+    "infoStop": "Info",
+    "selectDate": "Select date",
+    "filterStops": "Filter stops...",
+    "hideFilter": "Hide filter",
+    "showingStops": "Showing {{count}} of {{total}} stops",
+    "noStopsFound": "No stops found with this filter",
+    "loadMore": "Load more"
+  },
+  "info": {
+    "title": "Info",
+    "description": "Mamtab is a web app that allows you to explore bus lines, stops and schedules in Bari using GTFS data.",
+    "easterEgg": "Now try to find the other Easter eggs!"
+  },
+  "stop": {
+    "openInMaps": "Open in Google Maps",
+    "codeLabel": "Code:",
+    "noDepartures": "No departures available",
+    "collapsed": "{{count}} departures — click to expand",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  },
+  "error-page": {
+    "404": "404",
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "back-home": "Back to home"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "lang": {
+    "language": "Language",
+    "it": "Italian",
+    "en": "English"
+  }
+}

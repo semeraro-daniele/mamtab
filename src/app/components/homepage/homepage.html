@@ -1,0 +1,20 @@
+<div class="min-h-[calc(100vh-4rem)] w-full max-w-2xl mx-auto px-4
+         flex flex-col items-center justify-center text-center">
+  <h2 class="text-2xl font-semibold text-slate-100 mb-2">
+    {{ 'homepage.welcome' | translate }}
+  </h2>
+
+  <p class="text-slate-400 mb-8">
+    {{ 'homepage.chooseSearchType' | translate }}
+  </p>
+
+  <div class="flex flex-col gap-4 items-center">
+    <button (click)="goToStop()" class="w-64 btn-primary">
+      {{ 'homepage.searchByStop' | translate }}
+    </button>
+
+    <button (click)="goToLine()" class="w-64 btn-primary">
+      {{ 'homepage.searchByLine' | translate }}
+    </button>
+  </div>
+</div>

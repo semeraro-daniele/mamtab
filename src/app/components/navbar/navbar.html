@@ -1,0 +1,25 @@
+<header class="bg-slate-900/90 backdrop-blur
+         py-3 flex flex-row items-center justify-center">
+
+    <!-- Search form (visibile solo sulle pagine che lo supportano) -->
+    @if (showSearch) {
+    <div class="flex-1 max-w-lg w-full">
+        <form (submit)="onSearch()" class="relative w-full">
+
+            <input type="text" [(ngModel)]="searchQuery" name="search" [placeholder]="searchPlaceholder | translate"
+                class="input-field pr-24" />
+
+            <button type="submit" class="absolute right-1 top-1 bottom-1
+                 px-4 text-sm font-medium
+                 rounded-lg
+                 bg-sky-500/90 text-slate-900
+                 hover:bg-sky-400
+                 transition-colors">
+                {{ 'search.button' | translate }}
+            </button>
+
+        </form>
+    </div>
+    }
+
+</header>

@@ -1,0 +1,172 @@
+<div class="pb-4 px-4">
+  <app-navbar (search)="searchStop($event)" />
+
+  <!-- Ricerche recenti -->
+  @if (!searchPerformed && !loading && recentSearches.length > 0) {
+  <div class="mt-4">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="heading-secondary">
+        {{ 'search.recentSearches' | translate }}
+      </h2>
+      <button (click)="searchHistoryService.clearHistoryByType('stop'); loadRecentSearches()"
+        class="text-xs text-slate-400 hover:text-slate-200 transition-colors">
+        {{ 'search.clearHistory' | translate }}
+      </button>
+    </div>
+
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      @for (item of recentSearches; track item.timestamp) {
+      <button (click)="selectRecentSearch(item)" class="btn-recent-search group">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-slate-100 truncate">
+              {{ item.metadata?.stopName || item.query }}
+            </h3>
+            @if (item.metadata && item.metadata.stopCode) {
+            <p class="text-xs text-slate-400 mt-0.5">
+              {{ 'stop.codeLabel' | translate }} {{ item.metadata.stopCode }}
+            </p>
+            }
+          </div>
+          <button (click)="removeRecentSearch(item, $event)" class="shrink-0 text-slate-500 hover:text-red-400
+                       opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </button>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Loading -->
+  @if (loading) {
+  <p class="loading-text">
+    {{ 'search.loading' | translate }}
+  </p>
+  }
+
+  <!-- Risultati -->
+  @if (!loading && stops.length > 0) {
+  <div class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+    @for (stop of stops; track stop.stop_id) {
+    <div class="card">
+
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <!-- Collapse/expand -->
+          <button (click)="toggleExpand(stop.stop_id)" class="p-1 rounded hover:bg-slate-700 text-slate-300"
+            [attr.title]="isExpanded(stop.stop_id)
+                  ? ('stop.collapse' | translate)
+                  : ('stop.expand' | translate)">
+            @if (isExpanded(stop.stop_id)) {
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5H7z" />
+            </svg>
+            } @else {
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 14l5-5 5 5H7z" />
+            </svg>
+            }
+          </button>
+
+          <h2 class="heading-secondary truncate">
+            {{ stop.stop_name }}
+          </h2>
+        </div>
+
+        @if (stop.stop_lat && stop.stop_lon) {
+        <a href="https://www.google.com/maps/search/?api=1&query={{ stop.stop_lat }},{{ stop.stop_lon }}"
+          target="_blank" rel="noopener noreferrer" class="ml-2 inline-flex items-center gap-1 text-xs
+                       text-sky-400 hover:text-sky-300 transition-colors"
+          aria-label="{{ 'stop.openInMaps' | translate }}">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25
+                       7 13 7 13s7-7.75
+                       7-13c0-3.87-3.13-7-7-7zm0
+                       9.5A2.5 2.5 0 1 1 12
+                       6.5a2.5 2.5 0 0 1
+                       0 5z" />
+          </svg>
+        </a>
+        }
+      </div>
+
+      <p class="text-muted">
+        {{ 'stop.codeLabel' | translate }} {{ stop.stop_code || '-' }}
+      </p>
+
+      @if (isExpanded(stop.stop_id)) {
+      <ul class="divider-gray">
+        @for (dep of getVisibleDepartures(stop); track (dep.linea || dep.percorso) + '-' + dep.orario_partenza) {
+        <li (click)="goToLine(dep.linea || dep.percorso)" role="button"
+          class="py-2 flex items-start justify-between gap-2 cursor-pointer">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="shrink-0 badge-line">
+              {{ dep.linea || '?' }}
+            </span>
+            <span class="text-slate-200 text-sm truncate">
+              {{ dep.destinazione || dep.percorso }}
+            </span>
+          </div>
+          <div class="shrink-0 text-right">
+            <p class="text-slate-100 text-sm font-medium">
+              {{ dep.orario_partenza }}
+            </p>
+            @if (dep.tra) {
+            <p class="text-slate-400 text-xs">
+              ‹ {{ dep.tra }}
+            </p>
+            }
+          </div>
+        </li>
+        }
+
+        @if (hasMoreDepartures(stop)) {
+        <li class="flex justify-center border-t border-slate-700">
+          <button (click)="loadMoreDepartures(stop.stop_id)" 
+            class="p-2 rounded hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
+            [attr.title]="'search.loadMore' | translate">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </button>
+        </li>
+        }
+
+        @if (stop.lines.length === 0) {
+        <li class="py-2 text-slate-400 text-sm italic">
+          {{ 'stop.noDepartures' | translate }}
+        </li>
+        }
+      </ul>
+      } @else {
+      <div (click)="toggleExpand(stop.stop_id)" class="mt-2 text-muted cursor-pointer">
+        {{ 'stop.collapsed' | translate:{count: stop.lines.length} }}
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Nessun risultato -->
+  @if (!loading && searchPerformed && stops.length === 0) {
+  <p class="text-slate-400 text-center mt-8">
+    {{ 'search.noStopResults' | translate }}
+  </p>
+  }
+
+  <!-- Scroll to top -->
+  @if (showScrollButton) {
+  <button (click)="scrollToTop()" class="fixed bottom-18 right-4
+             bg-sky-600 hover:bg-sky-500 text-white p-3 rounded-full
+             transition-all duration-200 z-10" aria-label="Scroll to top">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
+  }
+</div>

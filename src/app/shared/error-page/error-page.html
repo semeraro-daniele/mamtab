@@ -1,0 +1,36 @@
+<div class="min-h-screen flex flex-col bg-gray-900">
+
+    <!-- Navbar -->
+    <header class="shadow-md p-4 flex items-center justify-between">
+        <div class="text-xl font-semibold text-gray-100">
+            <p>{{ 'app.title' | translate }}</p>
+        </div>
+    </header>
+
+    <!-- Contenuto errore -->
+    <div class="flex-1 flex flex-col items-center justify-center px-4 text-center">
+
+        <!-- Numero 404 -->
+        <p class="text-8xl font-extrabold text-blue-600 select-none leading-none">
+            404
+        </p>
+
+        <!-- Messaggio -->
+        <h1 class="mt-4 text-2xl font-semibold text-gray-100">
+            {{ 'error-page.title' | translate }}
+        </h1>
+
+        <p class="mt-2 text-gray-400 max-w-sm">
+            {{ 'error-page.description' | translate }}
+        </p>
+
+        <!-- Bottone -->
+        <div class="mt-4">
+            <button [routerLink]="'/homepage'" class="btn-primary">
+                {{ 'error-page.back-home' | translate }}
+            </button>
+        </div>
+
+    </div>
+
+</div>

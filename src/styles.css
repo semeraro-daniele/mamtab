@@ -1,0 +1,347 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+
+/* GLOBAL BASE */
+body {
+  @apply bg-slate-900 text-slate-100;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+main,
+header,
+nav,
+button,
+a,
+input,
+.card,
+.card-sm,
+.modal-content {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* BUTTONS */
+.btn-primary {
+  @apply px-6 py-3 rounded-xl text-sm font-medium transition-colors cursor-pointer;
+  @apply bg-sky-500/90 text-slate-900 hover:bg-sky-400;
+}
+
+.btn-primary-sm {
+  @apply px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer;
+  @apply bg-sky-500/90 text-slate-900 hover:bg-sky-400;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer;
+  @apply bg-slate-800 border border-slate-700 text-slate-100;
+  @apply hover:bg-slate-700 hover:border-sky-400;
+}
+
+/* LINE SELECTOR BUTTONS */
+.btn-line-selector {
+  @apply px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer;
+  @apply bg-slate-800 border-slate-700 text-slate-100 hover:bg-slate-700 hover:border-sky-400;
+}
+
+.btn-line-selector-extended {
+  @apply p-2.5 rounded-xl border transition-all cursor-pointer text-left;
+  @apply bg-slate-800 border-slate-700 hover:bg-slate-700 hover:border-sky-400;
+}
+
+.btn-recent-search {
+  @apply p-2.5 rounded-xl border transition-all cursor-pointer text-left;
+  @apply bg-slate-800 border-slate-700 hover:bg-slate-700 hover:border-sky-400;
+}
+
+/* TABS */
+.btn-tab {
+  @apply px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors cursor-pointer;
+}
+
+.btn-tab-active {
+  @apply bg-sky-500/90 border-transparent text-slate-900;
+}
+
+.btn-tab-inactive {
+  @apply bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700;
+}
+
+/* CARDS / CONTAINERS */
+.card {
+  @apply p-4 rounded-xl bg-slate-800 border border-slate-700 transition-all;
+}
+
+.card:hover {
+  @apply border-sky-400;
+  transform: translateY(-2px);
+}
+
+.card-sm {
+  @apply p-2.5 rounded-xl bg-slate-800 border border-slate-700 transition-all;
+}
+
+.card-sm:hover {
+  @apply border-sky-400;
+  transform: translateY(-2px);
+}
+
+/* BADGES */
+.badge-line {
+  @apply inline-block px-2 py-0.5 rounded-md bg-sky-400/80 text-slate-900 text-xs font-medium;
+}
+
+.badge-line-lg {
+  @apply px-3 py-1 rounded-lg bg-sky-500/90 text-slate-900 text-lg font-bold;
+}
+
+/* INPUT FIELDS */
+.input-field {
+  @apply w-full px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-100;
+  @apply focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent;
+}
+
+.input-field-sm {
+  @apply w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-100;
+  @apply focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent;
+}
+
+/* MENU / DROPDOWN */
+.menu-item {
+  @apply flex items-center gap-2 px-4 py-3 text-sm cursor-pointer transition-colors rounded-lg;
+}
+
+.menu-item-active {
+  @apply text-sky-400 bg-slate-700 font-medium;
+}
+
+.menu-item-inactive {
+  @apply text-slate-200 hover:bg-slate-700;
+}
+
+/* MODAL */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 pb-20;
+}
+
+.modal-content {
+  @apply bg-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col;
+}
+
+.modal-header {
+  @apply p-4 border-b border-slate-700 shrink-0;
+}
+
+.modal-body {
+  @apply p-4 overflow-y-auto flex-1;
+}
+
+/* TEXT STYLES */
+.text-muted {
+  @apply text-slate-400 text-sm;
+}
+
+.text-muted-xs {
+  @apply text-slate-400 text-xs;
+}
+
+.text-minimal {
+  @apply text-sky-400 text-center;
+}
+
+.text-minimal-sm {
+  @apply text-sky-400 text-xs text-center;
+}
+
+.heading-primary {
+  @apply text-xl font-bold text-slate-100;
+}
+
+.heading-secondary {
+  @apply font-semibold text-slate-100;
+}
+
+/* LOADING */
+.loading-text {
+  @apply text-slate-400 text-center mt-8 animate-pulse;
+}
+
+/* DIVIDERS */
+.divider-gray {
+  @apply divide-y divide-slate-700;
+}
+
+.border-gray-divider {
+  @apply border-t border-slate-700;
+}
+
+/* DATE INPUT ICON */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(1) brightness(1.15);
+}
+
+/* BOTTOM NAVIGATION */
+.bottom-nav-item {
+  @apply flex flex-col items-center justify-center flex-1 gap-1 py-2 px-1 transition-colors cursor-pointer text-center;
+}
+
+.bottom-nav-label {
+  @apply text-xs leading-tight;
+}
+
+.bottom-nav-active {
+  @apply text-sky-400;
+}
+
+.bottom-nav-inactive {
+  @apply text-slate-500 hover:text-slate-300;
+}
+
+/* THEME OVERRIDES */
+body.theme-light {
+  background-color: #f8fafc;
+  color: #0f172a;
+  color-scheme: light;
+}
+
+body.theme-dark {
+  color-scheme: dark;
+}
+
+body.theme-light .bg-slate-900,
+body.theme-light .bg-slate-900\/90,
+body.theme-light .bg-slate-900\/95 {
+  background-color: #f8fafc !important;
+}
+
+body.theme-light .bg-slate-800,
+body.theme-light .modal-content {
+  background-color: #ffffff !important;
+}
+
+body.theme-light .bg-slate-700,
+body.theme-light .bg-slate-600,
+body.theme-light .hover\:bg-slate-700:hover,
+body.theme-light .hover\:bg-slate-600:hover {
+  background-color: #e2e8f0 !important;
+}
+
+body.theme-light .border-slate-700,
+body.theme-light .border-gray-divider,
+body.theme-light .divider-gray> :not([hidden])~ :not([hidden]) {
+  border-color: #cbd5e1 !important;
+}
+
+body.theme-light .text-slate-100 {
+  color: #0f172a !important;
+}
+
+body.theme-light .text-slate-200,
+body.theme-light .text-slate-300 {
+  color: #334155 !important;
+}
+
+body.theme-light .text-slate-400,
+body.theme-light .text-slate-500,
+body.theme-light .text-muted,
+body.theme-light .text-muted-xs,
+body.theme-light .loading-text {
+  color: #64748b !important;
+}
+
+body.theme-light .heading-primary,
+body.theme-light .heading-secondary {
+  color: #0f172a !important;
+}
+
+body.theme-light .btn-secondary,
+body.theme-light .btn-line-selector,
+body.theme-light .btn-line-selector-extended,
+body.theme-light .btn-recent-search,
+body.theme-light .btn-tab-inactive,
+body.theme-light .card,
+body.theme-light .card-sm,
+body.theme-light .menu-item-inactive {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.theme-light .btn-secondary:hover,
+body.theme-light .btn-line-selector:hover,
+body.theme-light .btn-line-selector-extended:hover,
+body.theme-light .btn-recent-search:hover,
+body.theme-light .btn-tab-inactive:hover,
+body.theme-light .menu-item-inactive:hover {
+  background-color: #f1f5f9 !important;
+}
+
+body.theme-light .bg-sky-500\/90,
+body.theme-light .btn-primary,
+body.theme-light .btn-primary-sm,
+body.theme-light .btn-tab-active {
+  background-color: #dbeafe !important;
+  color: #1e3a8a !important;
+}
+
+body.theme-light .bg-sky-400\/80,
+body.theme-light .badge-line,
+body.theme-light .badge-line-lg {
+  background-color: #e0f2fe !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .text-sky-400,
+body.theme-light .text-minimal,
+body.theme-light .text-minimal-sm,
+body.theme-light .bottom-nav-active {
+  color: #2563eb !important;
+}
+
+body.theme-light .bottom-nav-inactive {
+  color: #64748b !important;
+}
+
+body.theme-light .hover\:text-sky-300:hover {
+  color: #1d4ed8 !important;
+}
+
+body.theme-light .hover\:text-slate-200:hover,
+body.theme-light .hover\:text-slate-300:hover {
+  color: #1e293b !important;
+}
+
+body.theme-light .hover\:bg-sky-400:hover {
+  background-color: #bfdbfe !important;
+}
+
+body.theme-light .hover\:border-sky-400:hover,
+body.theme-light .border-sky-400 {
+  border-color: #93c5fd !important;
+}
+
+body.theme-light .input-field,
+body.theme-light .input-field-sm {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+body.theme-light .modal-overlay {
+  background-color: rgb(15 23 42 / 25%) !important;
+}
+
+body.theme-light input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+body.theme-light input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: brightness(0.85);
+}
