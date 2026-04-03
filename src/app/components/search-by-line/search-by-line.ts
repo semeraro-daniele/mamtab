@@ -103,12 +103,6 @@ export class SearchByLine implements OnInit {
     this.searchLine(item.query, item.metadata?.routeLongName);
   }
 
-  removeRecentSearch(item: SearchHistoryItem, event: Event) {
-    event.stopPropagation();
-    this.searchHistoryService.removeSearch('line', item.query);
-    this.loadRecentSearches();
-  }
-
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const scrollPosition =

@@ -60,12 +60,6 @@ export class SearchByStop implements OnInit {
     this.searchStop(item.query);
   }
 
-  removeRecentSearch(item: SearchHistoryItem, event: Event) {
-    event.stopPropagation();
-    this.searchHistoryService.removeSearch('stop', item.query);
-    this.loadRecentSearches();
-  }
-
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
