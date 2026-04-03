@@ -1,110 +1,154 @@
 # Query SQL — /stops
 DEPARTURES_QUERY = """
 WITH candidati AS (
-	-- Raccoglie tutte le partenze candidate nel range temporale
-	-- per le fermate che matchano il where_clause.
-	-- Assegna un numero di riga per fermata, ordinato per orario,
-	-- così possiamo limitare le partenze PER FERMATA (non globalmente).
-	SELECT
-		s.stop_id,
-		s.stop_name,
-		s.stop_code,
-		s.stop_lat::float,
-		s.stop_lon::float,
-		r.route_short_name AS linea,
-		r.route_long_name  AS percorso,
-		t.trip_headsign    AS destinazione,
-		t.direction_id,
-		st.departure_time  AS departure_time_raw,
-		-- Normalizza orari GTFS oltre mezzanotte (es. 25:30 → 01:30)
-		CASE
-			WHEN split_part(st.departure_time, ':', 1)::int >= 24
-			THEN to_char(
-				make_interval(secs =>
-					split_part(st.departure_time, ':', 1)::int * 3600 +
-					split_part(st.departure_time, ':', 2)::int * 60  +
-					split_part(st.departure_time, ':', 3)::int
-				) - interval '24 hours',
-				'HH24:MI'
-			)
-			ELSE to_char(
-				make_time(
-					split_part(st.departure_time, ':', 1)::int,
-					split_part(st.departure_time, ':', 2)::int,
-					split_part(st.departure_time, ':', 3)::int
-				),
-				'HH24:MI'
-			)
-		END AS orario_partenza,
-		to_char(
-			make_interval(
-				hours => split_part(st.departure_time, ':', 1)::int,
-				mins  => split_part(st.departure_time, ':', 2)::int,
-				secs  => split_part(st.departure_time, ':', 3)::int
-			) - ((localtime + interval '1 hour') - '00:00:00'::time),
-			'HH24:MI'
-		) AS tra,
-		-- Rango per fermata: 1 = prossima partenza, 2 = seconda, ecc.
-		ROW_NUMBER() OVER (
-			PARTITION BY s.stop_id
-			ORDER BY
-				split_part(st.departure_time, ':', 1)::int * 3600 +
-				split_part(st.departure_time, ':', 2)::int * 60  +
-				split_part(st.departure_time, ':', 3)::int
-		) AS rn
+    SELECT
+        s.stop_id,
+        s.stop_name,
+        s.stop_code,
+        s.stop_lat::float,
+        s.stop_lon::float,
+        r.route_short_name AS linea,
+        r.route_long_name  AS percorso,
+        t.trip_headsign    AS destinazione,
+        t.direction_id,
+        st.departure_time  AS departure_time_raw,
 
-	FROM stop_times st
-	JOIN trips  t ON st.trip_id  = t.trip_id
-	JOIN routes r ON t.route_id  = r.route_id
-	JOIN stops  s ON st.stop_id  = s.stop_id
+        -- Normalizza orari GTFS oltre mezzanotte (es. 25:30 → 01:30)
+        split_part(st.departure_time, ':', 1)::int * 3600 +
+        split_part(st.departure_time, ':', 2)::int * 60  +
+        split_part(st.departure_time, ':', 3)::int
+            AS departure_secs,
 
-	WHERE
-		{where_clause}
+        EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400
+            AS now_secs,
 
-		AND t.service_id IN (
-			SELECT service_id
-			FROM calendar_dates
-			WHERE date = current_date
-			  AND exception_type = 1
-		)
+        CASE
+            WHEN split_part(st.departure_time, ':', 1)::int >= 24
+            THEN to_char(
+                make_interval(secs =>
+                    split_part(st.departure_time, ':', 1)::int * 3600 +
+                    split_part(st.departure_time, ':', 2)::int * 60  +
+                    split_part(st.departure_time, ':', 3)::int
+                ) - interval '24 hours',
+                'HH24:MI'
+            )
+            ELSE to_char(
+                make_time(
+                    split_part(st.departure_time, ':', 1)::int,
+                    split_part(st.departure_time, ':', 2)::int,
+                    split_part(st.departure_time, ':', 3)::int
+                ),
+                'HH24:MI'
+            )
+        END AS orario_partenza,
 
-		AND (
-			split_part(st.departure_time, ':', 1)::int * 3600 +
-			split_part(st.departure_time, ':', 2)::int * 60  +
-			split_part(st.departure_time, ':', 3)::int
-		)
-		BETWEEN
-			EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int - 600
-		AND
-			EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int + %(finestra)s
+        ROW_NUMBER() OVER (
+            PARTITION BY s.stop_id
+            ORDER BY
+                (
+                    split_part(st.departure_time, ':', 1)::int * 3600 +
+                    split_part(st.departure_time, ':', 2)::int * 60  +
+                    split_part(st.departure_time, ':', 3)::int
+                ) - (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400)
+                + CASE
+                    WHEN (
+                        split_part(st.departure_time, ':', 1)::int * 3600 +
+                        split_part(st.departure_time, ':', 2)::int * 60  +
+                        split_part(st.departure_time, ':', 3)::int
+                    ) < (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
+                    THEN 86400
+                    ELSE 0
+                  END
+        ) AS rn
 
-		-- Escludi solo le fermate dove il bus NON fa salire passeggeri
-		-- (pickup_type=1 significa "no pickup" — tipicamente i capolinea di arrivo).
-		-- È più preciso di confrontare stop_sequence con il MAX del trip,
-		-- perché non esclude fermate che sono capolinea di UNA linea ma
-		-- fermata intermedia di un'altra.
-		AND st.pickup_type != 1
+    FROM stop_times st
+    JOIN trips  t ON st.trip_id  = t.trip_id
+    JOIN routes r ON t.route_id  = r.route_id
+    JOIN stops  s ON st.stop_id  = s.stop_id
 
-		-- Escludi i trip dove il capolinea di destinazione è la fermata stessa
-		AND t.trip_headsign != s.stop_name
+    WHERE
+        {where_clause}
+
+        AND t.service_id IN (
+            SELECT service_id FROM calendar_dates
+            WHERE date IN (current_date, current_date - interval '1 day')
+              AND exception_type = 1
+        )
+
+        AND st.pickup_type != 1
+        AND t.trip_headsign != s.stop_name
+
+        AND (
+            (
+                split_part(st.departure_time, ':', 1)::int * 3600 +
+                split_part(st.departure_time, ':', 2)::int * 60  +
+                split_part(st.departure_time, ':', 3)::int
+                BETWEEN
+                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
+                AND
+                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s
+            )
+            OR
+            (
+                (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s > 86400
+                AND
+                split_part(st.departure_time, ':', 1)::int * 3600 +
+                split_part(st.departure_time, ':', 2)::int * 60  +
+                split_part(st.departure_time, ':', 3)::int
+                BETWEEN 0
+                AND (
+                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400)
+                    + %(finestra)s - 86400
+                )
+            )
+            OR
+            (
+                split_part(st.departure_time, ':', 1)::int * 3600 +
+                split_part(st.departure_time, ':', 2)::int * 60  +
+                split_part(st.departure_time, ':', 3)::int >= 86400
+                AND t.service_id IN (
+                    SELECT service_id FROM calendar_dates
+                    WHERE date = current_date - interval '1 day'
+                      AND exception_type = 1
+                )
+                AND (
+                    split_part(st.departure_time, ':', 1)::int * 3600 +
+                    split_part(st.departure_time, ':', 2)::int * 60  +
+                    split_part(st.departure_time, ':', 3)::int - 86400
+                )
+                BETWEEN
+                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
+                AND
+                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s
+            )
+        )
 )
 
 SELECT
-	stop_id,
-	stop_name,
-	stop_code,
-	stop_lat,
-	stop_lon,
-	linea,
-	percorso,
-	destinazione,
-	direction_id,
-	orario_partenza,
-	tra
+    stop_id,
+    stop_name,
+    stop_code,
+    stop_lat,
+    stop_lon,
+    linea,
+    percorso,
+    destinazione,
+    direction_id,
+    orario_partenza,
+    to_char(
+        make_interval(secs => (
+            departure_secs
+            - now_secs
+            + CASE WHEN departure_secs < now_secs - 600 THEN 86400 ELSE 0 END
+        )),
+        'HH24:MI'
+    ) AS tra
 FROM candidati
--- Limita a %(departures_per_stop)s partenze per fermata
 WHERE rn <= %(departures_per_stop)s
-ORDER BY stop_name, departure_time_raw;
+ORDER BY stop_name, (
+    departure_secs - now_secs
+    + CASE WHEN departure_secs < now_secs - 600 THEN 86400 ELSE 0 END
+);
 """
 
 
