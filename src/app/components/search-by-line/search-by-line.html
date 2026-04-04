@@ -12,8 +12,7 @@
         <h2 class="section-label">
           {{ 'search.recentSearches' | translate }}
         </h2>
-        <button
-          (click)="searchHistoryService.clearHistoryByType('line'); loadRecentSearches()"
+        <button (click)="searchHistoryService.clearHistoryByType('line'); loadRecentSearches()"
           class="text-xs text-slate-500 hover:text-slate-300 transition-colors py-1 px-2 rounded-lg hover:bg-slate-800">
           {{ 'search.clearHistory' | translate }}
         </button>
@@ -64,12 +63,10 @@
       @if (!loadingLines && allLines.length > 0) {
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         @for (lineInfo of allLines; track lineInfo.route_id) {
-        <button
-          (click)="selectLine(
+        <button (click)="selectLine(
             lineInfo.route_short_name || lineInfo.route_long_name || '',
             lineInfo.route_long_name || undefined
-          )"
-          class="btn-line-selector-extended">
+          )" class="btn-line-selector-extended">
           <div class="flex items-center gap-2.5">
             <span class="badge-line shrink-0">
               {{ lineInfo.route_short_name || lineInfo.route_long_name }}
@@ -123,9 +120,7 @@
   @if (line.directions.length > 1) {
   <div class="flex gap-2 mb-4 flex-wrap">
     @for (dir of line.directions; track dir.direction_id) {
-    <button
-      (click)="activeDirection = dir.direction_id"
-      class="btn-tab"
+    <button (click)="activeDirection = dir.direction_id" class="btn-tab"
       [ngClass]="activeDirection === dir.direction_id ? 'btn-tab-active' : 'btn-tab-inactive'"
       [attr.aria-pressed]="activeDirection === dir.direction_id">
       → {{ dir.headsign || ('search.direction' | translate:{num: dir.direction_id}) }}
@@ -190,9 +185,7 @@
       </div>
 
       <!-- Vedi tutti -->
-      <button
-        (click)="openStopDetails(stop.stop_id, stop.stop_name)"
-        class="mt-2.5 pt-2.5 border-gray-divider w-full text-left transition-colors
+      <button (click)="openStopDetails(stop.stop_id, stop.stop_name)" class="mt-2.5 pt-2.5 border-gray-divider w-full text-left transition-colors
                hover:text-sky-300">
         <p class="text-minimal-sm">
           {{ 'search.viewAllDepartures' | translate }}
@@ -247,12 +240,9 @@
             }
             }
           </div>
-          <button
-            (click)="closeModal()"
-            class="shrink-0 w-9 h-9 rounded-xl bg-slate-700 hover:bg-slate-600
+          <button (click)="closeModal()" class="shrink-0 w-9 h-9 rounded-xl bg-slate-700 hover:bg-slate-600
                    flex items-center justify-center text-slate-400 hover:text-slate-200
-                   transition-colors"
-            aria-label="Chiudi">
+                   transition-colors" aria-label="Chiudi">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -264,14 +254,8 @@
           <label for="date-selector" class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
             {{ 'search.selectDate' | translate }}
           </label>
-          <input
-            id="date-selector"
-            type="date"
-            [value]="selectedDate"
-            (change)="onDateChange($event)"
-            [min]="getTodayDate()"
-            [max]="getMaxDate()"
-            class="input-field-sm max-w-xs" />
+          <input id="date-selector" type="date" [value]="selectedDate" (change)="onDateChange($event)"
+            [min]="getTodayDate()" [max]="getMaxDate()" class="input-field-sm max-w-xs" />
         </div>
       </div>
 
@@ -323,20 +307,12 @@
   @if (showFilterInput) {
   <div class="fixed bottom-20 left-4 right-20 z-10">
     <div class="relative max-w-md shadow-xl">
-      <input
-        type="text"
-        [(ngModel)]="stopFilterQuery"
-        placeholder="{{ 'search.filterStops' | translate }}"
-        class="input-field pr-10 w-full"
-        autofocus
-        aria-label="{{ 'search.filterStops' | translate }}" />
+      <input type="text" [(ngModel)]="stopFilterQuery" placeholder="{{ 'search.filterStops' | translate }}"
+        class="input-field pr-10 w-full" autofocus aria-label="{{ 'search.filterStops' | translate }}" />
       @if (stopFilterQuery) {
-      <button
-        (click)="clearFilter()"
-        class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center
+      <button (click)="clearFilter()" class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center
                justify-center rounded-md text-slate-400 hover:text-slate-200
-               hover:bg-slate-600 transition-colors"
-        aria-label="Cancella filtro">
+               hover:bg-slate-600 transition-colors" aria-label="Cancella filtro">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -350,11 +326,8 @@
   <div class="fixed bottom-20 right-4 flex flex-col gap-2 z-10">
 
     @if (showScrollButton) {
-    <button
-      (click)="scrollToTop()"
-      class="bg-slate-700 hover:bg-slate-600 text-slate-300 p-3 rounded-full
-             shadow-lg transition-all duration-200 active:scale-95"
-      aria-label="Torna su">
+    <button (click)="scrollToTop()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 p-3 rounded-full
+             shadow-lg transition-all duration-200 active:scale-95" aria-label="Torna su">
       <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>
@@ -362,9 +335,7 @@
     }
 
     @if (line && currentDirection && currentDirection.stops.length > 0) {
-    <button
-      (click)="toggleFilterInput()"
-      class="p-3 rounded-full transition-all duration-200 shadow-lg active:scale-95"
+    <button (click)="toggleFilterInput()" class="p-3 rounded-full transition-all duration-200 shadow-lg active:scale-95"
       [ngClass]="showFilterInput
         ? 'bg-sky-600 hover:bg-sky-500 text-white'
         : 'bg-slate-700 hover:bg-slate-600 text-slate-300'"
