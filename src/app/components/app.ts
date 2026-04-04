@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterModule, RouterOutlet, NavigationStart } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../services/language.service';
@@ -27,6 +27,13 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.translate.use(this.languageService.getLanguage());
+
+    // Close info menu when navigating to another route
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.infoMenuOpen = false;
+      }
+    });
   }
 
   get currentLanguage(): string {
@@ -47,11 +54,6 @@ export class App implements OnInit {
 
   toggleInfoMenu(): void {
     this.infoMenuOpen = !this.infoMenuOpen;
-    if (this.infoMenuOpen && this.isActive('/info')) {
-      // se siamo già sulla pagina info, vai alla pagina invece di aprire il menu
-      this.infoMenuOpen = false;
-      this.router.navigate(['/info']);
-    }
   }
 
   changeTheme(theme: AppTheme): void {
