@@ -316,17 +316,20 @@ WHERE
 	)
 	
 	AND st.pickup_type != 1
-
+    
 ORDER BY
-	-- Ordina gli orari mettendo quelli dopo mezzanotte (00:00-05:59) alla fine
 	CASE
-		WHEN split_part(st.departure_time, ':', 1)::int < 6
-		THEN split_part(st.departure_time, ':', 1)::int * 3600 +
-		     split_part(st.departure_time, ':', 2)::int * 60 +
-		     split_part(st.departure_time, ':', 3)::int + 86400
-		ELSE split_part(st.departure_time, ':', 1)::int * 3600 +
-		     split_part(st.departure_time, ':', 2)::int * 60 +
-		     split_part(st.departure_time, ':', 3)::int
+		WHEN split_part(st.departure_time, ':', 1)::int >= 24
+		THEN make_time(
+			split_part(st.departure_time, ':', 1)::int - 24,
+			split_part(st.departure_time, ':', 2)::int,
+			split_part(st.departure_time, ':', 3)::int
+		)
+		ELSE make_time(
+			split_part(st.departure_time, ':', 1)::int,
+			split_part(st.departure_time, ':', 2)::int,
+			split_part(st.departure_time, ':', 3)::int
+		)
 	END;
 """
 
