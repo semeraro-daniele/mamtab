@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from "../navbar/navbar";
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-list-lines',
-  imports: [TranslateModule, NavbarComponent],
+  imports: [TranslateModule],
   templateUrl: './list-lines.html',
 })
 export class ListLines implements OnInit {
