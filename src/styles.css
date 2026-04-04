@@ -4,75 +4,75 @@
 /* TEMA SCURO */
 :root {
   /* Superfici */
-  --bg-base: #0f172a;
-  /* sfondo pagina */
-  --bg-surface: #1e293b;
-  /* card, input, navbar */
-  --bg-raised: #273548;
+  --bg-base: #0b0a0a;
+  /* sfondo pagina (caldo, quasi nero con sottotono rosso) */
+  --bg-surface: #1a0f0f;
+  /* card, input, navbar (superficie leggermente più chiara) */
+  --bg-raised: #241313;
   /* hover su surface */
-  --bg-overlay: #2e3f55;
+  --bg-overlay: #2e1616;
   /* hover su raised, dropdown attivo */
 
   /* Bordi */
-  --border-default: #334155;
+  --border-default: #3a2121;
   /* bordi neutri */
-  --border-subtle: #253347;
+  --border-subtle: #271414;
   /* divisori interni */
-  --border-accent: #38bdf8;
+  --border-accent: #ff6b6b;
   /* hover accent */
 
   /* Testo */
-  --text-primary: #f1f5f9;
-  /* titoli, testo principale */
-  --text-secondary: #94a3b8;
+  --text-primary: #fff5f5;
+  /* titoli, testo principale (leggermente caldo) */
+  --text-secondary: #d9bebe;
   /* label, codici, sottotitoli */
-  --text-muted: #64748b;
+  --text-muted: #b9a3a3;
   /* placeholder, info terziaria */
-  --text-disabled: #475569;
+  --text-disabled: #8f7a7a;
   /* icone empty state */
 
   /* Accent */
-  --accent: #0ea5e9;
-  /* sky-500 */
-  --accent-hover: #38bdf8;
-  /* sky-400 */
+  --accent: #ff4d4d;
+  /* Bari red (dark theme variant) */
+  --accent-hover: #ff2b2b;
+  /* stronger hover */
   --accent-fg: #ffffff;
   /* testo sopra accent */
 
   /* Focus */
-  --focus-ring: #38bdf8;
+  --focus-ring: #ff4d4d;
 
   /* Ombre */
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 6px 24px rgba(14, 165, 233, 0.12);
+  --shadow-card-hover: 0 6px 24px rgba(255, 77, 77, 0.12);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
 
 /* TEMA CHIARO */
 body.theme-light {
-  --bg-base: #f1f5f9;
+  --bg-base: #ffffff;
   --bg-surface: #ffffff;
-  --bg-raised: #f8fafc;
-  --bg-overlay: #e2e8f0;
+  --bg-raised: #fff5f5;
+  --bg-overlay: #fff0f0;
 
-  --border-default: #e2e8f0;
-  --border-subtle: #edf0f4;
-  --border-accent: #7dd3fc;
+  --border-default: #f3dcdc;
+  --border-subtle: #f7e7e7;
+  --border-accent: #ff7f7f;
 
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-disabled: #94a3b8;
 
-  --accent: #2563eb;
-  /* blue-600 — più leggibile su bianco */
-  --accent-hover: #1d4ed8;
+  --accent: #cc0000;
+  /* Rosso Bari */
+  --accent-hover: #b30000;
   --accent-fg: #ffffff;
 
-  --focus-ring: #2563eb;
+  --focus-ring: #cc0000;
 
   --shadow-card: 0 1px 4px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.04);
-  --shadow-card-hover: 0 4px 20px rgba(37, 99, 235, 0.10);
+  --shadow-card-hover: 0 4px 20px rgba(204, 0, 0, 0.10);
   --shadow-modal: 0 24px 64px rgba(15, 23, 42, 0.25);
 }
 
