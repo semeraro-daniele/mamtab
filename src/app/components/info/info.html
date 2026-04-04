@@ -1,18 +1,16 @@
-<div class="min-h-[calc(100vh-4rem)] w-full max-w-2xl mx-auto px-4
-         flex flex-col items-center justify-center text-center">
+<div class="min-h-[calc(100vh-4rem)] w-full max-w-2xl mx-auto px-4 flex flex-col items-center justify-center text-center">
 
-  <h2 class="text-2xl font-semibold text-slate-100 mb-4
-           cursor-pointer select-none hover:text-sky-400 transition-colors" (click)="handleClick()">
+  <h2 class="heading-primary mb-4 cursor-pointer select-none transition-colors" (click)="handleClick()">
     {{ 'info.title' | translate }}
   </h2>
 
-  <p class="heading-secondary text-slate-300">
+  <p class="heading-secondary text-secondary-var">
     {{ 'info.description' | translate }}
   </p>
 
   <!-- Easter egg -->
   @if (showEasterEgg) {
-  <p class="mt-4 text-emerald-400 text-sm animate-pulse">
+  <p class="mt-4 text-minimal-sm animate-pulse">
     {{ 'info.easterEgg' | translate }}
   </p>
   }
