@@ -3,17 +3,18 @@
 
   <!-- Selezione linea / ricerche recenti -->
   @if (!searchPerformed && !loading) {
-  <div class="mt-4">
+  <div class="mt-5">
 
     <!-- Ricerche recenti -->
     @if (recentSearches.length > 0) {
     <div class="mb-6">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="heading-secondary">
+        <h2 class="section-label">
           {{ 'search.recentSearches' | translate }}
         </h2>
-        <button (click)="searchHistoryService.clearHistoryByType('line'); loadRecentSearches()"
-          class="text-xs text-slate-400 hover:text-slate-200 transition-colors">
+        <button
+          (click)="searchHistoryService.clearHistoryByType('line'); loadRecentSearches()"
+          class="text-xs text-slate-500 hover:text-slate-300 transition-colors py-1 px-2 rounded-lg hover:bg-slate-800">
           {{ 'search.clearHistory' | translate }}
         </button>
       </div>
@@ -21,15 +22,22 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         @for (item of recentSearches; track item.timestamp) {
         <button (click)="selectRecentSearch(item)" class="btn-recent-search group">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2 min-w-0">
-              <span class="badge-line shrink-0">
+          <div class="flex items-center gap-2.5">
+            <div class="shrink-0 w-7 h-7 rounded-md bg-slate-700 group-hover:bg-slate-600
+                        flex items-center justify-center transition-colors">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <span class="badge-line">
                 {{ item.metadata?.routeShortName || item.query }}
               </span>
-              @if (item.metadata && item.metadata.routeLongName) {
-              <span class="text-xs text-slate-400 truncate">
-                {{ item.metadata.routeLongName }}
-              </span>
+              @if (item.metadata?.routeLongName) {
+              <p class="text-xs text-slate-500 truncate mt-0.5">
+                {{ item.metadata?.routeLongName }}
+              </p>
               }
             </div>
           </div>
@@ -41,29 +49,33 @@
 
     <!-- Tutte le linee -->
     <div>
-      <h2 class="heading-secondary mb-3">
+      <h2 class="section-label mb-3">
         {{ 'search.availableLines' | translate }}
       </h2>
 
       @if (loadingLines) {
-      <p class="loading-text">
-        {{ 'search.loading' | translate }}
-      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        @for (_ of [1,2,3,4,5,6,7,8]; track $index) {
+        <div class="skeleton h-14 rounded-xl"></div>
+        }
+      </div>
       }
 
       @if (!loadingLines && allLines.length > 0) {
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         @for (lineInfo of allLines; track lineInfo.route_id) {
-        <button (click)="selectLine(
-                  lineInfo.route_short_name || lineInfo.route_long_name || '',
-                  lineInfo.route_long_name || undefined
-                )" class="btn-line-selector-extended">
-          <div class="flex items-center gap-2">
+        <button
+          (click)="selectLine(
+            lineInfo.route_short_name || lineInfo.route_long_name || '',
+            lineInfo.route_long_name || undefined
+          )"
+          class="btn-line-selector-extended">
+          <div class="flex items-center gap-2.5">
             <span class="badge-line shrink-0">
               {{ lineInfo.route_short_name || lineInfo.route_long_name }}
             </span>
             @if (lineInfo.route_long_name && lineInfo.route_short_name) {
-            <span class="text-xs text-slate-400 truncate">
+            <span class="text-xs text-slate-400 truncate leading-tight">
               {{ lineInfo.route_long_name }}
             </span>
             }
@@ -76,23 +88,32 @@
   </div>
   }
 
-  <!-- Loading -->
+  <!-- Loading risultati linea -->
   @if (loading) {
-  <p class="loading-text">
-    {{ 'search.loading' | translate }}
-  </p>
+  <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    @for (_ of [1,2,4]; track $index) {
+    <div class="card-sm">
+      <div class="skeleton h-4 w-2/3 mb-2"></div>
+      <div class="skeleton h-3 w-1/3 mb-3"></div>
+      <div class="space-y-1.5">
+        <div class="skeleton h-9 w-full rounded-lg"></div>
+        <div class="skeleton h-9 w-full rounded-lg"></div>
+      </div>
+    </div>
+    }
+  </div>
   }
 
   <!-- Risultati linea -->
   @if (!loading && line) {
 
   <!-- Header linea -->
-  <div class="mt-4 mb-3 flex items-center gap-3">
+  <div class="mt-5 mb-4 flex items-center gap-3">
     <span class="badge-line-lg">
       {{ line.route_short_name || line.route_long_name }}
     </span>
     @if (line.route_long_name) {
-    <span class="text-slate-300 text-sm">
+    <span class="text-slate-300 text-sm font-medium">
       {{ line.route_long_name }}
     </span>
     }
@@ -100,11 +121,13 @@
 
   <!-- Direzioni -->
   @if (line.directions.length > 1) {
-  <div class="flex gap-2 mb-4">
+  <div class="flex gap-2 mb-4 flex-wrap">
     @for (dir of line.directions; track dir.direction_id) {
-    <button (click)="activeDirection = dir.direction_id" class="btn-tab" [ngClass]="activeDirection === dir.direction_id
-              ? 'btn-tab-active'
-              : 'btn-tab-inactive'">
+    <button
+      (click)="activeDirection = dir.direction_id"
+      class="btn-tab"
+      [ngClass]="activeDirection === dir.direction_id ? 'btn-tab-active' : 'btn-tab-inactive'"
+      [attr.aria-pressed]="activeDirection === dir.direction_id">
       → {{ dir.headsign || ('search.direction' | translate:{num: dir.direction_id}) }}
     </button>
     }
@@ -115,42 +138,48 @@
   @if (currentDirection) {
 
   @if (filteredStops.length === 0) {
-  <p class="text-slate-400 text-center py-8">
-    {{ 'search.noStopsFound' | translate }}
-  </p>
+  <div class="empty-state">
+    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <p class="empty-state-text">{{ 'search.noStopsFound' | translate }}</p>
+  </div>
   } @else {
   <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
     @for (stop of filteredStops; track stop.stop_id) {
     <div class="card-sm cursor-pointer">
 
       <div (click)="goToStop(stop.stop_id)" role="button">
-        <div class="flex items-start justify-between gap-2 mb-2">
-          <h2 class="heading-secondary leading-tight">
+        <!-- Header fermata -->
+        <div class="flex items-start justify-between gap-2 mb-1.5">
+          <h2 class="heading-secondary text-sm leading-tight">
             {{ stop.stop_name }}
           </h2>
-          <span class="shrink-0 text-xs text-slate-500 mt-0.5">
+          <span class="shrink-0 text-xs text-slate-600 font-medium mt-0.5 tabular-nums">
             #{{ stop.stop_sequence }}
           </span>
         </div>
 
         @if (stop.stop_code) {
-        <p class="text-muted-xs mb-2">
-          {{ 'stop.codeLabel' | translate }} {{ stop.stop_code }}
+        <p class="text-muted-xs mb-2.5">
+          {{ 'stop.codeLabel' | translate }} <span class="font-medium text-slate-400">{{ stop.stop_code }}</span>
         </p>
         }
 
+        <!-- Partenze -->
         <ul class="divider-gray">
           @for (dep of stop.departures; track dep.trip_id + dep.orario_partenza) {
-          <li class="py-1.5 flex items-center justify-between gap-2">
+          <li class="py-2 flex items-center justify-between gap-2">
             <span class="text-slate-300 text-xs truncate">
               {{ dep.trip_headsign || '—' }}
             </span>
             <div class="shrink-0 text-right">
-              <p class="text-slate-100 text-sm font-medium">
+              <p class="text-slate-100 text-sm font-semibold tabular-nums">
                 {{ dep.orario_partenza }}
               </p>
               @if (dep.tra) {
-              <p class="text-slate-400 text-xs">
+              <p class="text-slate-500 text-xs tabular-nums">
                 ‹ {{ dep.tra }}
               </p>
               }
@@ -161,11 +190,14 @@
       </div>
 
       <!-- Vedi tutti -->
-      <div (click)="openStopDetails(stop.stop_id, stop.stop_name)" role="button" class="mt-2 pt-2 border-gray-divider">
+      <button
+        (click)="openStopDetails(stop.stop_id, stop.stop_name)"
+        class="mt-2.5 pt-2.5 border-gray-divider w-full text-left transition-colors
+               hover:text-sky-300">
         <p class="text-minimal-sm">
           {{ 'search.viewAllDepartures' | translate }}
         </p>
-      </div>
+      </button>
 
     </div>
     }
@@ -176,21 +208,26 @@
 
   <!-- Nessun risultato -->
   @if (!loading && searchPerformed && !line) {
-  <p class="text-slate-400 text-center mt-8">
-    {{ 'search.noLineResults' | translate }}
-  </p>
+  <div class="empty-state">
+    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+    <p class="empty-state-text">{{ 'search.noLineResults' | translate }}</p>
+  </div>
   }
 
-  <!-- Modal -->
+  <!-- Modal dettaglio orari -->
   @if (showModal) {
-  <div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-overlay" (click)="closeModal()" role="dialog" aria-modal="true"
+    [attr.aria-label]="stopDepartures?.stop_name">
     <div class="modal-content" (click)="$event.stopPropagation()">
 
       <div class="modal-header">
-        <div class="flex items-start justify-between mb-3">
-          <div class="flex-1">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1 min-w-0">
             @if (stopDepartures) {
-            <h2 class="heading-primary mb-1">
+            <h2 class="heading-primary mb-2 truncate">
               {{ stopDepartures.stop_name }}
             </h2>
             <div class="flex items-center gap-2 flex-wrap">
@@ -204,52 +241,71 @@
               }
             </div>
             @if (stopDepartures.stop_code) {
-            <p class="text-muted-xs mt-1">
+            <p class="text-muted-xs mt-1.5">
               {{ 'stop.codeLabel' | translate }} {{ stopDepartures.stop_code }}
             </p>
             }
             }
           </div>
-          <button (click)="closeModal()" class="ml-4 text-slate-400 hover:text-slate-200 transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button
+            (click)="closeModal()"
+            class="shrink-0 w-9 h-9 rounded-xl bg-slate-700 hover:bg-slate-600
+                   flex items-center justify-center text-slate-400 hover:text-slate-200
+                   transition-colors"
+            aria-label="Chiudi">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div class="my-3">
-          <label for="date-selector" class="block text-sm font-medium text-slate-300 mb-2">
+        <!-- Selettore data -->
+        <div class="mt-4">
+          <label for="date-selector" class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
             {{ 'search.selectDate' | translate }}
           </label>
-          <input id="date-selector" type="date" [value]="selectedDate" (change)="onDateChange($event)"
-            [min]="getTodayDate()" [max]="getMaxDate()" class="input-field-sm" />
+          <input
+            id="date-selector"
+            type="date"
+            [value]="selectedDate"
+            (change)="onDateChange($event)"
+            [min]="getTodayDate()"
+            [max]="getMaxDate()"
+            class="input-field-sm max-w-xs" />
         </div>
       </div>
 
       <div class="modal-body">
         @if (modalLoading) {
-        <p class="loading-text">
-          {{ 'search.loading' | translate }}
-        </p>
+        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 mt-2">
+          @for (_ of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
+          <div class="skeleton h-12 rounded-lg"></div>
+          }
+        </div>
         }
 
         @if (!modalLoading && stopDepartures) {
-        <p class="text-muted mb-3">
-          {{ 'search.allDeparturesForDay' | translate }}
-          ({{ stopDepartures.departures.length }}
-          {{ 'search.departures' | translate }})
+        <p class="text-muted mb-4 text-xs">
+          {{ 'search.allDeparturesForDay' | translate }} ·
+          <span class="font-medium text-slate-300">
+            {{ stopDepartures.departures.length }} {{ 'search.departures' | translate }}
+          </span>
         </p>
 
         @if (stopDepartures.departures.length === 0) {
-        <p class="text-slate-400 text-center py-8">
-          {{ 'search.noDeparturesFound' | translate }}
-        </p>
+        <div class="empty-state py-10">
+          <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="empty-state-text">{{ 'search.noDeparturesFound' | translate }}</p>
+        </div>
         } @else {
-        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2">
+        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-1.5">
           @for (dep of stopDepartures.departures; track dep.trip_id + dep.orario_partenza) {
-          <div class="p-2.5 rounded bg-slate-700
-                           text-center hover:bg-slate-600 transition-colors">
-            <p class="text-slate-100 font-medium text-sm">
+          <div class="p-2.5 rounded-lg bg-slate-700/60 border border-slate-700
+                       text-center hover:bg-slate-700 hover:border-sky-400/40 transition-colors">
+            <p class="text-slate-100 font-semibold text-sm tabular-nums">
               {{ dep.orario_partenza }}
             </p>
           </div>
@@ -263,18 +319,25 @@
   </div>
   }
 
-  <!-- Filter input -->
+  <!-- Filtro fermate -->
   @if (showFilterInput) {
-  <div class="fixed bottom-19 left-6 right-20 z-10
-            drop-shadow-[0_16px_30px_rgba(0,0,0,0.45)]
-            drop-shadow-[0_16px_10px_rgba(0,0,0,0.35)]">
-    <div class="relative max-w-md">
-      <input type="text" [(ngModel)]="stopFilterQuery" placeholder="{{ 'search.filterStops' | translate }}"
-        class="input-field pr-10 w-full" autofocus />
+  <div class="fixed bottom-20 left-4 right-20 z-10">
+    <div class="relative max-w-md shadow-xl">
+      <input
+        type="text"
+        [(ngModel)]="stopFilterQuery"
+        placeholder="{{ 'search.filterStops' | translate }}"
+        class="input-field pr-10 w-full"
+        autofocus
+        aria-label="{{ 'search.filterStops' | translate }}" />
       @if (stopFilterQuery) {
-      <button (click)="clearFilter()"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button
+        (click)="clearFilter()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center
+               justify-center rounded-md text-slate-400 hover:text-slate-200
+               hover:bg-slate-600 transition-colors"
+        aria-label="Cancella filtro">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -283,27 +346,31 @@
   </div>
   }
 
-  <!-- Floating action buttons (right side) -->
-  <div class="fixed bottom-18 right-4 flex flex-col gap-2 z-10">
+  <!-- Floating action buttons (destra) -->
+  <div class="fixed bottom-20 right-4 flex flex-col gap-2 z-10">
 
-    <!-- Scroll to top button -->
     @if (showScrollButton) {
-    <button (click)="scrollToTop()"
-      class="bg-sky-600 hover:bg-sky-500 text-white p-3 rounded-full transition-all duration-200"
-      aria-label="Scroll to top">
-      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <button
+      (click)="scrollToTop()"
+      class="bg-slate-700 hover:bg-slate-600 text-slate-300 p-3 rounded-full
+             shadow-lg transition-all duration-200 active:scale-95"
+      aria-label="Torna su">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>
     </button>
     }
 
-    <!-- Filter button (always in the same position) -->
     @if (line && currentDirection && currentDirection.stops.length > 0) {
-    <button (click)="toggleFilterInput()" class="p-3 rounded-full transition-all duration-200 shadow-lg" [ngClass]="showFilterInput
+    <button
+      (click)="toggleFilterInput()"
+      class="p-3 rounded-full transition-all duration-200 shadow-lg active:scale-95"
+      [ngClass]="showFilterInput
         ? 'bg-sky-600 hover:bg-sky-500 text-white'
         : 'bg-slate-700 hover:bg-slate-600 text-slate-300'"
-      [attr.aria-label]="showFilterInput ? ('search.hideFilter' | translate) : ('search.filterStops' | translate)">
-      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      [attr.aria-label]="showFilterInput ? ('search.hideFilter' | translate) : ('search.filterStops' | translate)"
+      [attr.aria-pressed]="showFilterInput">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>

@@ -3,28 +3,35 @@
 
   <!-- Ricerche recenti -->
   @if (!searchPerformed && !loading && recentSearches.length > 0) {
-  <div class="mt-4">
+  <div class="mt-5">
     <div class="flex items-center justify-between mb-3">
-      <h2 class="heading-secondary">
+      <h2 class="section-label">
         {{ 'search.recentSearches' | translate }}
       </h2>
       <button (click)="searchHistoryService.clearHistoryByType('stop'); loadRecentSearches()"
-        class="text-xs text-slate-400 hover:text-slate-200 transition-colors">
+        class="text-xs text-slate-500 hover:text-slate-300 transition-colors py-1 px-2 rounded-lg hover:bg-slate-800">
         {{ 'search.clearHistory' | translate }}
       </button>
     </div>
 
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       @for (item of recentSearches; track item.timestamp) {
       <button (click)="selectRecentSearch(item)" class="btn-recent-search group">
-        <div class="flex items-start justify-between gap-2">
-          <div class="flex-1 min-w-0">
-            <h3 class="font-semibold text-slate-100 truncate">
+        <div class="flex items-center gap-3">
+          <div class="shrink-0 w-8 h-8 rounded-lg bg-slate-700 group-hover:bg-slate-600
+                      flex items-center justify-center transition-colors">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0 text-left">
+            <p class="font-semibold text-slate-100 truncate text-sm leading-tight">
               {{ item.metadata?.stopName || item.query }}
-            </h3>
-            @if (item.metadata && item.metadata.stopCode) {
-            <p class="text-xs text-slate-400 mt-0.5">
-              {{ 'stop.codeLabel' | translate }} {{ item.metadata.stopCode }}
+            </p>
+            @if (item.metadata?.stopCode) {
+            <p class="text-xs text-slate-500 mt-0.5">
+              {{ 'stop.codeLabel' | translate }} {{ item.metadata?.stopCode }}
             </p>
             }
           </div>
@@ -37,67 +44,73 @@
 
   <!-- Loading -->
   @if (loading) {
-  <p class="loading-text">
-    {{ 'search.loading' | translate }}
-  </p>
+  <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    @for (_ of [1,2,3]; track $index) {
+    <div class="card">
+      <div class="skeleton h-5 w-2/3 mb-3"></div>
+      <div class="skeleton h-3.5 w-1/3 mb-4"></div>
+      <div class="space-y-2">
+        <div class="skeleton h-10 w-full rounded-lg"></div>
+        <div class="skeleton h-10 w-full rounded-lg"></div>
+      </div>
+    </div>
+    }
+  </div>
   }
 
   <!-- Risultati -->
   @if (!loading && stops.length > 0) {
-  <div class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="grid gap-4 mt-5 sm:grid-cols-2 lg:grid-cols-3">
     @for (stop of stops; track stop.stop_id) {
     <div class="card">
 
-      <div class="flex items-start justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <!-- Collapse/expand -->
-          <button (click)="toggleExpand(stop.stop_id)" class="p-1 rounded hover:bg-slate-700 text-slate-300"
-            [attr.title]="isExpanded(stop.stop_id)
-                  ? ('stop.collapse' | translate)
-                  : ('stop.expand' | translate)">
-            @if (isExpanded(stop.stop_id)) {
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+      <!-- Header fermata -->
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <button (click)="toggleExpand(stop.stop_id)" class="shrink-0 w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600
+                   flex items-center justify-center text-slate-300 transition-colors" [attr.aria-label]="isExpanded(stop.stop_id)
+              ? ('stop.collapse' | translate)
+              : ('stop.expand' | translate)" [attr.aria-expanded]="isExpanded(stop.stop_id)">
+            <svg class="h-4 w-4 transition-transform duration-200" [class.rotate-180]="isExpanded(stop.stop_id)"
+              viewBox="0 0 24 24" fill="currentColor">
               <path d="M7 10l5 5 5-5H7z" />
             </svg>
-            } @else {
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 14l5-5 5 5H7z" />
-            </svg>
-            }
           </button>
 
-          <h2 class="heading-secondary truncate">
+          <h2 class="heading-secondary text-base truncate">
             {{ stop.stop_name }}
           </h2>
         </div>
 
         @if (stop.stop_lat && stop.stop_lon) {
         <a href="https://www.google.com/maps/search/?api=1&query={{ stop.stop_lat }},{{ stop.stop_lon }}"
-          target="_blank" rel="noopener noreferrer" class="ml-2 inline-flex items-center gap-1 text-xs
-                       text-sky-400 hover:text-sky-300 transition-colors"
-          aria-label="{{ 'stop.openInMaps' | translate }}">
+          target="_blank" rel="noopener noreferrer" class="shrink-0 w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600
+                 flex items-center justify-center text-sky-400 hover:text-sky-300 transition-colors"
+          [attr.aria-label]="'stop.openInMaps' | translate">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25
-                       7 13 7 13s7-7.75
-                       7-13c0-3.87-3.13-7-7-7zm0
-                       9.5A2.5 2.5 0 1 1 12
-                       6.5a2.5 2.5 0 0 1
-                       0 5z" />
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75
+                     7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12
+                     6.5a2.5 2.5 0 0 1 0 5z" />
           </svg>
         </a>
         }
       </div>
 
-      <p class="text-muted">
-        {{ 'stop.codeLabel' | translate }} {{ stop.stop_code || '-' }}
+      <!-- Codice fermata -->
+      @if (stop.stop_code) {
+      <p class="text-muted-xs mb-3 ml-9">
+        {{ 'stop.codeLabel' | translate }} <span class="font-medium text-slate-300">{{ stop.stop_code }}</span>
       </p>
+      }
 
+      <!-- Partenze espanse -->
       @if (isExpanded(stop.stop_id)) {
-      <ul class="divider-gray">
+      <ul class="divider-gray mt-1">
         @for (dep of getVisibleDepartures(stop); track (dep.linea || dep.percorso) + '-' + dep.orario_partenza) {
         <li (click)="goToLine(dep.linea || dep.percorso)" role="button"
-          class="py-2 flex items-start justify-between gap-2 cursor-pointer">
-          <div class="flex items-center gap-2 min-w-0">
+          [attr.aria-label]="'Linea ' + (dep.linea || dep.percorso) + ' verso ' + (dep.destinazione || dep.percorso)"
+          class="departure-item">
+          <div class="flex items-center gap-2.5 min-w-0">
             <span class="shrink-0 badge-line">
               {{ dep.linea || '?' }}
             </span>
@@ -106,18 +119,16 @@
             </span>
           </div>
           <div class="shrink-0 text-right">
-            <p class="text-slate-100 text-sm font-medium">
+            <p class="text-slate-100 text-sm font-semibold tabular-nums">
               {{ dep.orario_partenza }}
             </p>
             @if (dep.tra) {
-            <div class="flex items-center gap-0.5 text-slate-400 text-xs">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3 h-3">
+            <div class="flex items-center justify-end gap-0.5 text-slate-400 text-xs mt-0.5">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3 h-3 shrink-0">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              <p class="">
-                {{ dep.tra }}
-              </p>
+              <span class="tabular-nums">{{ dep.tra }}</span>
             </div>
             }
           </div>
@@ -125,27 +136,33 @@
         }
 
         @if (hasMoreDepartures(stop)) {
-        <li class="flex justify-center border-t border-slate-700">
-          <button (click)="loadMoreDepartures(stop.stop_id)"
-            class="p-2 rounded hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
-            [attr.title]="'search.loadMore' | translate">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <li class="pt-1">
+          <button (click)="loadMoreDepartures(stop.stop_id)" class="w-full py-2.5 rounded-lg text-sky-400 hover:text-sky-300
+                   hover:bg-slate-700 text-xs font-medium transition-colors
+                   flex items-center justify-center gap-1.5">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
+            {{ 'search.loadMore' | translate }}
           </button>
         </li>
         }
 
         @if (stop.lines.length === 0) {
-        <li class="py-2 text-slate-400 text-sm italic">
+        <li class="py-4 text-slate-500 text-sm text-center">
           {{ 'stop.noDepartures' | translate }}
         </li>
         }
       </ul>
       } @else {
-      <div (click)="toggleExpand(stop.stop_id)" class="mt-2 text-muted cursor-pointer">
+      <button (click)="toggleExpand(stop.stop_id)" class="mt-1 w-full text-left py-2 px-2 rounded-lg
+               text-sky-400 text-sm hover:bg-slate-700 transition-colors
+               flex items-center gap-1.5">
+        <svg class="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
         {{ 'stop.collapsed' | translate:{count: stop.lines.length} }}
-      </div>
+      </button>
       }
     </div>
     }
@@ -154,17 +171,24 @@
 
   <!-- Nessun risultato -->
   @if (!loading && searchPerformed && stops.length === 0) {
-  <p class="text-slate-400 text-center mt-8">
-    {{ 'search.noStopResults' | translate }}
-  </p>
+  <div class="empty-state">
+    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    <p class="empty-state-text">
+      {{ 'search.noStopResults' | translate }}
+    </p>
+  </div>
   }
 
   <!-- Scroll to top -->
   @if (showScrollButton) {
-  <button (click)="scrollToTop()" class="fixed bottom-18 right-4
-             bg-sky-600 hover:bg-sky-500 text-white p-3 rounded-full
-             transition-all duration-200 z-10" aria-label="Scroll to top">
-    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <button (click)="scrollToTop()" class="fixed bottom-20 right-4 bg-sky-600 hover:bg-sky-500
+           text-white p-3 rounded-full shadow-lg shadow-sky-900/30
+           transition-all duration-200 z-10 active:scale-95" aria-label="Torna su">
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
     </svg>
   </button>
