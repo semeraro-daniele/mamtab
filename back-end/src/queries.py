@@ -318,19 +318,17 @@ WHERE
 	AND st.pickup_type != 1
     
 ORDER BY
-	CASE
-		WHEN split_part(st.departure_time, ':', 1)::int >= 24
-		THEN make_time(
-			split_part(st.departure_time, ':', 1)::int - 24,
-			split_part(st.departure_time, ':', 2)::int,
-			split_part(st.departure_time, ':', 3)::int
-		)
-		ELSE make_time(
-			split_part(st.departure_time, ':', 1)::int,
-			split_part(st.departure_time, ':', 2)::int,
-			split_part(st.departure_time, ':', 3)::int
-		)
-	END;
+    CASE
+        WHEN split_part(st.departure_time, ':', 1)::int < 4
+        THEN split_part(st.departure_time, ':', 1)::int * 3600
+           + split_part(st.departure_time, ':', 2)::int * 60
+           + split_part(st.departure_time, ':', 3)::int
+           + 86400  -- sposta dopo le 24:00
+        ELSE
+             split_part(st.departure_time, ':', 1)::int * 3600
+           + split_part(st.departure_time, ':', 2)::int * 60
+           + split_part(st.departure_time, ':', 3)::int
+    END;
 """
 
 

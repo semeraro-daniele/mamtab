@@ -18,7 +18,7 @@ nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
 
 Stop:
 sudo lsof -i :8000
-sudo kill -p [ID]
+sudo kill -9 [ID]
 """
 
 from typing import Optional
