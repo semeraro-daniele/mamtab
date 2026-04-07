@@ -31,6 +31,7 @@ import db
 import queries
 import utils
 from models import StopsResponse, LineResponse, StopLineDeparturesResponse, StopLineDeparture, LinesResponse, LineInfo
+from utils import build_line_params
 
 
 router = APIRouter(prefix="/api")
@@ -158,17 +159,7 @@ def lines_by_id(line_id: str):
     if not query_s:
         raise HTTPException(status_code=400, detail="Query non valida dopo sanitizzazione.")
 
-    line_exact_list = [query_s]
-    if query_s.isdigit():
-        if len(query_s) == 1:
-            line_exact_list.append(f"0{query_s}")
-        elif len(query_s) == 2 and query_s.startswith("0"):
-            line_exact_list.append(str(int(query_s)))
-
-    params: dict = {
-        "line_exact_list": line_exact_list,
-        "line_like": f"%{query_s}%",
-    }
+    params: dict = build_line_params(query_s)
 
     try:
         with db.get_conn() as conn:
@@ -205,17 +196,10 @@ def _fetch_stop_line_departures(
     if not line_s:
         raise HTTPException(status_code=400, detail="Parametro 'line_id' non valido.")
 
-    line_exact_list = [line_s]
-    if line_s.isdigit():
-        if len(line_s) == 1:
-            line_exact_list.append(f"0{line_s}")
-        elif len(line_s) == 2 and line_s.startswith("0"):
-            line_exact_list.append(str(int(line_s)))
-
+    line_params = build_line_params(line_s)
     params = {
         "stop_id": stop_id,
-        "line_exact_list": line_exact_list,
-        "line_like": f"%{line_s}%",
+        **line_params,
         "direction_id": direction_id,
         "target_date": date,
     }

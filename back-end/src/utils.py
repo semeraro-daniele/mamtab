@@ -11,6 +11,53 @@ from models import (
 )
 
 
+def is_exact_line_code(q: str) -> bool:
+    """Restituisce True se la query sembra un codice linea da cercare solo per
+    route_short_name esatto (es. 'D', 'E', 'AB', 'PJ', '02/', 'AP').
+
+    Regola: non è un numero puro (quelli hanno già la loro logica),
+    oppure è alfanumerica corta (≤ 4 caratteri).
+    """
+    q = q.strip()
+    if not q:
+        return False
+    # Se è tutto cifre, non è un codice alfabetico
+    if q.isdigit():
+        return False
+    # Codici tipo 'D', 'AB', 'PJ', '02/', '11/', 'AP', '32A' ecc.
+    # Sono corti (≤ 5 char) e contengono almeno una lettera o uno slash
+    if len(q) <= 5 and re.search(r"[A-Za-z/]", q):
+        return True
+    return False
+
+
+def build_line_params(query_s: str) -> dict:
+    """Costruisce i parametri `line_exact_list` e `line_like` per le query SQL
+    sulle linee, gestendo sia codici numerici che alfabetici/misti.
+
+    Per codici alfabetici/misti corti (es. 'D', 'AB', '02/') usa solo la
+    ricerca esatta su route_short_name, evitando falsi positivi ILIKE sul
+    route_long_name.
+    """
+    line_exact_list = [query_s]
+
+    if query_s.isdigit():
+        # Gestisce '1' ↔ '01', '02' ↔ '2', ecc.
+        if len(query_s) == 1:
+            line_exact_list.append(f"0{query_s}")
+        elif len(query_s) == 2 and query_s.startswith("0"):
+            line_exact_list.append(str(int(query_s)))
+        line_like = f"%{query_s}%"
+    elif is_exact_line_code(query_s):
+        # Codice alfabetico/misto: cerca SOLO per short_name esatto (case-insensitive
+        # gestita da ANY), disabilita il LIKE impostando un pattern impossibile.
+        line_like = r"\x00__NO_ILIKE_MATCH__"
+    else:
+        line_like = f"%{query_s}%"
+
+    return {"line_exact_list": line_exact_list, "line_like": line_like}
+
+
 def clean_input_query(q: Optional[str]) -> Optional[str]:
     """Pulisce e normalizza la stringa di query lato API.
 
