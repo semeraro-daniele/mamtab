@@ -76,7 +76,10 @@ WITH candidati AS (
         )
 
         AND st.pickup_type != 1
-        AND t.trip_headsign != s.stop_name
+        AND (
+            t.trip_headsign != s.stop_name
+            OR st.drop_off_type = 1
+        )
 
         AND (
             (
@@ -240,12 +243,7 @@ WITH rep_trips AS (
 		FROM trips t
 		JOIN routes r ON t.route_id = r.route_id
 		-- Non filtrare per `calendar_dates` qui: vogliamo mostrare la linea indipendentemente da festivo/feriale
-		WHERE (
-			UPPER(r.route_short_name) = ANY(
-				SELECT UPPER(v) FROM UNNEST(%(line_exact_list)s::text[]) v
-			)
-			OR r.route_long_name ILIKE %(line_like)s
-		)
+		WHERE (r.route_short_name = ANY(%(line_exact_list)s) OR r.route_long_name ILIKE %(line_like)s)
 	-- Ordina per direction_id e poi per qualche criterio stabile (qui trip_id)
 	ORDER BY t.direction_id, t.trip_id
 )
@@ -312,12 +310,7 @@ JOIN stops s ON st.stop_id = s.stop_id
 
 WHERE
 	s.stop_id = %(stop_id)s
-	AND (
-		UPPER(r.route_short_name) = ANY(
-			SELECT UPPER(v) FROM UNNEST(%(line_exact_list)s::text[]) v
-		)
-		OR r.route_long_name ILIKE %(line_like)s
-	)
+	AND (r.route_short_name = ANY(%(line_exact_list)s) OR r.route_long_name ILIKE %(line_like)s)
 	AND t.direction_id = %(direction_id)s
 	
 	AND t.service_id IN (
