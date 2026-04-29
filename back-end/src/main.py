@@ -30,7 +30,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import db
 import queries
 import utils
-from models import StopsResponse, LineResponse, StopLineDeparturesResponse, StopLineDeparture, LinesResponse, LineInfo
+from models import StopsResponse, LineResponse, StopLineDeparturesResponse, StopLineDeparture, LinesResponse, LineInfo, NearbyStopsResponse, NearbyStop
 from utils import build_line_params
 
 
@@ -57,6 +57,64 @@ app.add_middleware(
 )
 
 # STOPS
+@router.get(
+    "/stops/nearby",
+    response_model=NearbyStopsResponse,
+    summary="Fermate vicine a coordinate geografiche",
+)
+def nearby_stops(lat: float, lon: float, radius: int = 500):
+    """
+    Restituisce le fermate più vicine a una posizione geografica.
+    
+    Args:
+        lat: Latitudine (es: 41.1171)
+        lon: Longitudine (es: 16.8719)
+        radius: Raggio di ricerca in metri (default: 500, max: 5000)
+    """
+    # Validazione parametri
+    if not (-90 <= lat <= 90):
+        raise HTTPException(status_code=400, detail="Latitudine non valida (deve essere tra -90 e 90)")
+    if not (-180 <= lon <= 180):
+        raise HTTPException(status_code=400, detail="Longitudine non valida (deve essere tra -180 e 180)")
+    if not (1 <= radius <= 5000):
+        raise HTTPException(status_code=400, detail="Raggio non valido (deve essere tra 1 e 5000 metri)")
+    
+    params = {
+        "lat": lat,
+        "lon": lon,
+        "radius": radius,
+    }
+    
+    try:
+        with db.get_conn() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute(queries.NEARBY_STOPS_QUERY, params)
+                rows = [dict(r) for r in cur.fetchall()]
+    except Exception:
+        logging.exception("DB error while fetching nearby stops")
+        raise HTTPException(status_code=500, detail="Internal server error")
+    
+    stops = [
+        NearbyStop(
+            stop_id=row["stop_id"],
+            stop_name=row["stop_name"],
+            stop_code=row.get("stop_code"),
+            stop_lat=row["stop_lat"],
+            stop_lon=row["stop_lon"],
+            distance=round(row["distance"], 1),
+        )
+        for row in rows
+    ]
+    
+    return NearbyStopsResponse(
+        lat=lat,
+        lon=lon,
+        radius=radius,
+        risultati=len(stops),
+        stops=stops,
+    )
+
+
 @router.get(
     "/stops/{query}",
     response_model=StopsResponse,

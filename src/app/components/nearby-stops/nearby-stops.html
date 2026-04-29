@@ -1,0 +1,124 @@
+<main class="container mx-auto px-4 py-8 max-w-4xl">
+  <h1 class="heading-primary text-3xl mb-6 text-center">{{ 'nearby.title' | translate }}</h1>
+
+  <!-- Geolocation not supported -->
+  @if (!geolocationSupported) {
+  <div class="card p-4 border-default error-message">
+    <p class="font-bold text-primary-var">{{ 'nearby.geolocationNotSupported' | translate }}</p>
+  </div>
+  }
+
+  <!-- Request location button -->
+  @if (geolocationSupported && userLat === null) {
+  <div class="text-center mb-8">
+    <p class="mb-4 text-secondary-var">{{ 'nearby.description' | translate }}</p>
+    <button (click)="requestLocation()" [disabled]="loading" class="btn-primary">
+      @if (loading) {
+      <span>{{ 'search.loading' | translate }}</span>
+      } @else {
+      <span>{{ 'nearby.getLocation' | translate }}</span>
+      }
+    </button>
+  </div>
+  }
+
+  <!-- Radius selector -->
+  @if (userLat !== null && userLon !== null) {
+  <div class="mb-6 flex flex-wrap gap-2 justify-center">
+    <span class="self-center font-semibold text-primary-var">{{ 'nearby.radius' | translate }}:</span>
+    <button (click)="changeRadius(250)" [class.btn-tab-active]="radius === 250"
+      [class.btn-tab-inactive]="radius !== 250" class="btn-tab">
+      250m
+    </button>
+    <button (click)="changeRadius(500)" [class.btn-tab-active]="radius === 500"
+      [class.btn-tab-inactive]="radius !== 500" class="btn-tab">
+      500m
+    </button>
+    <button (click)="changeRadius(1000)" [class.btn-tab-active]="radius === 1000"
+      [class.btn-tab-inactive]="radius !== 1000" class="btn-tab">
+      1km
+    </button>
+  </div>
+  }
+
+  <!-- Error message (shown in content area) -->
+  @if (error && userLat !== null) {
+  <div class="empty-state">
+    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <p class="empty-state-text">{{ error | translate }}</p>
+  </div>
+  }
+
+  <!-- Loading skeleton -->
+  @if (loading && !error) {
+  <div class="space-y-4">
+    @for (_ of [1,2,3]; track $index) {
+    <div class="card">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <div class="skeleton h-5 w-3/4 mb-2"></div>
+          <div class="skeleton h-3.5 w-1/3 mb-3"></div>
+          <div class="skeleton h-6 w-20 rounded-full"></div>
+        </div>
+        <div class="skeleton h-8 w-8 rounded-lg"></div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Results -->
+  @if (!loading && !error && stops.length > 0) {
+  <div class="mb-4 text-center text-secondary-var">
+    {{ 'nearby.foundStops' | translate: {count: stops.length} }}
+  </div>
+
+  <div class="space-y-4">
+    @for (stop of stops; track stop.stop_id) {
+    <div class="card cursor-pointer" (click)="goToStop(stop.stop_id)">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <h3 class="heading-secondary text-lg mb-1">{{ stop.stop_name }}</h3>
+          @if (stop.stop_code) {
+          <p class="text-muted-xs mb-2">
+            {{ 'stop.codeLabel' | translate }} {{ stop.stop_code }}
+          </p>
+          }
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium accent-bg">
+              {{ formatDistance(stop.distance) }}
+            </span>
+          </div>
+        </div>
+        <a href="https://www.google.com/maps/search/?api=1&query={{ stop.stop_lat }},{{ stop.stop_lon }}"
+          target="_blank" rel="noopener noreferrer"
+          class="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors bg-raised-var accent-color hover-bg-overlay"
+          [attr.aria-label]="'stop.openInMaps' | translate" (click)="$event.stopPropagation()">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75
+                     7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12
+                     6.5a2.5 2.5 0 0 1 0 5z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- No results -->
+  @if (!loading && stops.length === 0 && userLat !== null && !error) {
+  <div class="empty-state">
+    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    <p class="empty-state-text">{{ 'nearby.noStopsFound' | translate }}</p>
+    <p class="text-muted-xs mt-2">{{ 'nearby.tryIncreaseRadius' | translate }}</p>
+  </div>
+  }
+</main>

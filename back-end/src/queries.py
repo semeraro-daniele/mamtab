@@ -351,3 +351,39 @@ WHERE r.route_short_name IS NOT NULL
 GROUP BY r.route_id, r.route_short_name, r.route_long_name
 ORDER BY sort_key;
 """
+
+
+# Query SQL — /stops/nearby (fermate vicine a coordinate geografiche)
+NEARBY_STOPS_QUERY = """
+SELECT
+	s.stop_id,
+	s.stop_name,
+	s.stop_code,
+	s.stop_lat::float,
+	s.stop_lon::float,
+	-- Calcolo distanza haversine in metri
+	(
+		6371000 * acos(
+			cos(radians(%(lat)s)) * cos(radians(s.stop_lat::float)) *
+			cos(radians(s.stop_lon::float) - radians(%(lon)s)) +
+			sin(radians(%(lat)s)) * sin(radians(s.stop_lat::float))
+		)
+	) AS distance
+FROM stops s
+WHERE
+	s.stop_lat IS NOT NULL
+	AND s.stop_lon IS NOT NULL
+	-- Pre-filtro con bounding box per performance
+	AND s.stop_lat::float BETWEEN %(lat)s - (%(radius)s / 111320.0) AND %(lat)s + (%(radius)s / 111320.0)
+	AND s.stop_lon::float BETWEEN %(lon)s - (%(radius)s / (111320.0 * cos(radians(%(lat)s)))) AND %(lon)s + (%(radius)s / (111320.0 * cos(radians(%(lat)s))))
+	-- Filtro finale con distanza haversine
+	AND (
+		6371000 * acos(
+			cos(radians(%(lat)s)) * cos(radians(s.stop_lat::float)) *
+			cos(radians(s.stop_lon::float) - radians(%(lon)s)) +
+			sin(radians(%(lat)s)) * sin(radians(s.stop_lat::float))
+		)
+	) <= %(radius)s
+ORDER BY distance
+LIMIT 50;
+"""

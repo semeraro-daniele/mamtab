@@ -27,4 +27,8 @@ export class Homepage implements OnInit {
   goToStop(): void {
     this.router.navigate(['/stop']);
   }
+
+  goToNearby(): void {
+    this.router.navigate(['/nearby']);
+  }
 }

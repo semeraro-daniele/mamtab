@@ -90,3 +90,21 @@ class LineInfo(BaseModel):
 
 class LinesResponse(BaseModel):
 	lines: List[LineInfo]
+
+
+# Modelli — /stops/nearby
+class NearbyStop(BaseModel):
+	stop_id: str
+	stop_name: str
+	stop_code: Optional[str]
+	stop_lat: float
+	stop_lon: float
+	distance: float  # distance in meters
+
+
+class NearbyStopsResponse(BaseModel):
+	lat: float
+	lon: float
+	radius: int
+	risultati: int
+	stops: List[NearbyStop]

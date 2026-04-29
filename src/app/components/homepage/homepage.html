@@ -10,12 +10,17 @@
   </p>
 
   <div class="flex flex-col gap-4 items-center">
+    
+    <button (click)="goToLine()" class="btn-primary w-64">
+      {{ 'homepage.searchByLine' | translate }}
+    </button>
+    
     <button (click)="goToStop()" class="btn-primary w-64">
       {{ 'homepage.searchByStop' | translate }}
     </button>
 
-    <button (click)="goToLine()" class="btn-primary w-64">
-      {{ 'homepage.searchByLine' | translate }}
+    <button (click)="goToNearby()" class="btn-primary w-64">
+      {{ 'homepage.nearbyStops' | translate }}
     </button>
   </div>
 

@@ -7,6 +7,7 @@
     "chooseSearchType": "Choose the type of search:",
     "searchByLine": "Search by line",
     "searchByStop": "Search by stop",
+    "nearbyStops": "Nearby stops",
     "info": "Info"
   },
   "nav": {
@@ -20,8 +21,8 @@
     "linePlaceholder": "Line",
     "button": "Search",
     "loading": "Loading...",
-    "noStopResults": "No stops found.",
-    "noLineResults": "No lines found.",
+    "noStopResults": "No stops found",
+    "noLineResults": "No lines found",
     "availableLines": "Available lines",
     "recentSearches": "Recent searches",
     "clearHistory": "Clear history",
@@ -55,7 +56,7 @@
   "error-page": {
     "404": "404",
     "title": "Page not found",
-    "description": "The page you are looking for does not exist or has been moved.",
+    "description": "The page you are looking for does not exist or has been moved",
     "back-home": "Back to home"
   },
   "theme": {
@@ -67,5 +68,20 @@
     "language": "Language",
     "it": "Italian",
     "en": "English"
+  },
+  "nearby": {
+    "title": "Nearby Stops",
+    "description": "Find the closest stops to your location",
+    "getLocation": "Get Location",
+    "radius": "Radius",
+    "foundStops": "Found {{count}} stops",
+    "noStopsFound": "No stops found within the selected radius",
+    "tryIncreaseRadius": "Try increasing the search radius",
+    "geolocationNotSupported": "Geolocation is not supported by your browser",
+    "permissionDenied": "Geolocation permission denied. Enable location in your browser settings",
+    "positionUnavailable": "Position unavailable. Check your GPS connection",
+    "timeout": "Location request timeout. Please try again",
+    "unknownError": "Unknown error while getting location",
+    "loadError": "Error loading nearby stops"
   }
 }

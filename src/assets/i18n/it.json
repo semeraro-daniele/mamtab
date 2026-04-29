@@ -7,6 +7,7 @@
     "chooseSearchType": "Scegli il tipo di ricerca:",
     "searchByLine": "Cerca per linea",
     "searchByStop": "Cerca per fermata",
+    "nearbyStops": "Fermate vicino a me",
     "info": "Info"
   },
   "nav": {
@@ -20,8 +21,8 @@
     "linePlaceholder": "Linea",
     "button": "Cerca",
     "loading": "Caricamento in corso...",
-    "noStopResults": "Nessuna fermata trovata.",
-    "noLineResults": "Nessuna linea trovata.",
+    "noStopResults": "Nessuna fermata trovata",
+    "noLineResults": "Nessuna linea trovata",
     "availableLines": "Linee disponibili",
     "recentSearches": "Ricerche recenti",
     "clearHistory": "Cancella cronologia",
@@ -55,7 +56,7 @@
   "error-page": {
     "404": "404",
     "title": "Pagina non trovata",
-    "description": "La pagina che stai cercando non esiste o è stata spostata.",
+    "description": "La pagina che stai cercando non esiste o è stata spostata",
     "back-home": "Torna alla home"
   },
   "theme": {
@@ -67,5 +68,20 @@
     "language": "Lingua",
     "it": "Italiano",
     "en": "Inglese"
+  },
+  "nearby": {
+    "title": "Fermate vicino a me",
+    "description": "Trova le fermate più vicine alla tua posizione",
+    "getLocation": "Ottieni posizione",
+    "radius": "Raggio",
+    "foundStops": "Trovate {{count}} fermate",
+    "noStopsFound": "Nessuna fermata trovata nel raggio selezionato",
+    "tryIncreaseRadius": "Prova ad aumentare il raggio di ricerca",
+    "geolocationNotSupported": "La geolocalizzazione non è supportata dal tuo browser",
+    "permissionDenied": "Permesso di geolocalizzazione negato. Abilita la posizione nelle impostazioni del browser",
+    "positionUnavailable": "Posizione non disponibile. Verifica la connessione GPS",
+    "timeout": "Timeout nella richiesta di posizione. Riprova",
+    "unknownError": "Errore sconosciuto durante l'acquisizione della posizione",
+    "loadError": "Errore nel caricamento delle fermate vicine"
   }
 }

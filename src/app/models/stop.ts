@@ -23,3 +23,20 @@ export interface StopsResponse {
   risultati: number;
   stops: Stop[];
 }
+
+export interface NearbyStop {
+  stop_id: string;
+  stop_name: string;
+  stop_code: string | null;
+  stop_lat: number;
+  stop_lon: number;
+  distance: number;
+}
+
+export interface NearbyStopsResponse {
+  lat: number;
+  lon: number;
+  radius: number;
+  risultati: number;
+  stops: NearbyStop[];
+}
