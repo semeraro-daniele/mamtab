@@ -49,7 +49,7 @@ WITH candidati AS (
                     split_part(st.departure_time, ':', 1)::int * 3600 +
                     split_part(st.departure_time, ':', 2)::int * 60  +
                     split_part(st.departure_time, ':', 3)::int
-                ) - (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400)
+                ) - (EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400)
 						+ CASE
 										WHEN (
 												split_part(st.departure_time, ':', 1)::int * 3600 +
@@ -100,7 +100,7 @@ WITH candidati AS (
                 split_part(st.departure_time, ':', 3)::int
                 BETWEEN 0
                 AND (
-                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400)
+                    (EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400)
                     + %(finestra)s - 86400
                 )
             )
