@@ -662,3 +662,20 @@ body.theme-light input[type="date"]::-webkit-calendar-picker-indicator {
 .hover-text-secondary:hover { color: var(--text-secondary); }
 .hover-opacity-90:hover { opacity: 0.9; }
 .hover-border-accent:hover { border-color: var(--border-accent); }
+
+/* FILTER PANEL: sfondo sfumato per evidenziare la barra di ricerca delle fermate */
+.filter-panel {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-card);
+}
+
+body.theme-light .filter-panel {
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0));
+}
+
+.filter-panel .relative { width: 100%; }

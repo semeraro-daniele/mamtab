@@ -283,17 +283,19 @@
   <!-- Filtro fermate -->
   @if (showFilterInput) {
   <div class="fixed bottom-20 left-4 right-20 z-10">
-    <div class="relative max-w-md shadow-xl">
-      <input type="text" [(ngModel)]="stopFilterQuery" placeholder="{{ 'search.filterStops' | translate }}"
-        class="input-field pr-10 w-full" autofocus [attr.aria-label]="'search.filterStops' | translate" />
-      @if (stopFilterQuery) {
-      <button (click)="clearFilter()"
-        class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-md transition-colors text-secondary-var hover-bg-raised hover-text-primary">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-      }
+    <div class="filter-panel">
+      <div class="relative max-w-md">
+        <input type="text" [(ngModel)]="stopFilterQuery" placeholder="{{ 'search.filterStops' | translate }}"
+          class="input-field pr-10 w-full" autofocus [attr.aria-label]="'search.filterStops' | translate" />
+        @if (stopFilterQuery) {
+        <button (click)="clearFilter()"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-md transition-colors text-secondary-var hover-bg-raised hover-text-primary">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        }
+      </div>
     </div>
   </div>
   }
