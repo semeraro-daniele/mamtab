@@ -19,8 +19,8 @@ WITH candidati AS (
         split_part(st.departure_time, ':', 3)::int
             AS departure_secs,
 
-        EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400
-            AS now_secs,
+		EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400
+			AS now_secs,
 
         CASE
             WHEN split_part(st.departure_time, ':', 1)::int >= 24
@@ -50,15 +50,15 @@ WITH candidati AS (
                     split_part(st.departure_time, ':', 2)::int * 60  +
                     split_part(st.departure_time, ':', 3)::int
                 ) - (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400)
-                + CASE
-                    WHEN (
-                        split_part(st.departure_time, ':', 1)::int * 3600 +
-                        split_part(st.departure_time, ':', 2)::int * 60  +
-                        split_part(st.departure_time, ':', 3)::int
-                    ) < (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
-                    THEN 86400
-                    ELSE 0
-                  END
+						+ CASE
+										WHEN (
+												split_part(st.departure_time, ':', 1)::int * 3600 +
+												split_part(st.departure_time, ':', 2)::int * 60  +
+												split_part(st.departure_time, ':', 3)::int
+										) < (EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) - 600
+										THEN 86400
+										ELSE 0
+									END
         ) AS rn
 
     FROM stop_times st
@@ -87,13 +87,13 @@ WITH candidati AS (
                 split_part(st.departure_time, ':', 2)::int * 60  +
                 split_part(st.departure_time, ':', 3)::int
                 BETWEEN
-                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
-                AND
-                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s
+					(EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) - 600
+					AND
+						(EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) + %(finestra)s
             )
             OR
             (
-                (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s > 86400
+				(EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) + %(finestra)s > 86400
                 AND
                 split_part(st.departure_time, ':', 1)::int * 3600 +
                 split_part(st.departure_time, ':', 2)::int * 60  +
@@ -120,9 +120,9 @@ WITH candidati AS (
                     split_part(st.departure_time, ':', 3)::int - 86400
                 )
                 BETWEEN
-                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) - 600
-                AND
-                    (EXTRACT(EPOCH FROM (localtime + interval '1 hour'))::int %% 86400) + %(finestra)s
+					(EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) - 600
+				AND
+					(EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int %% 86400) + %(finestra)s
             )
         )
 )
@@ -195,7 +195,7 @@ SELECT
 			hours => split_part(st.departure_time, ':', 1)::int,
 			mins  => split_part(st.departure_time, ':', 2)::int,
 			secs  => split_part(st.departure_time, ':', 3)::int
-		) - (localtime - '00:00:00'::time),
+		) - ((now() AT TIME ZONE 'Europe/Rome')::time - '00:00:00'::time),
 		'HH24:MI'
 	) AS tra
 
@@ -218,9 +218,9 @@ WHERE
 		split_part(st.departure_time, ':', 3)::int
 	)
 	BETWEEN
-		EXTRACT(EPOCH FROM localtime)::int - 600
+		EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int - 600
 	AND
-		EXTRACT(EPOCH FROM localtime)::int + %(finestra)s
+		EXTRACT(EPOCH FROM (now() AT TIME ZONE 'Europe/Rome'))::int + %(finestra)s
 
 ORDER BY t.direction_id, st.stop_sequence, st.departure_time
 LIMIT %(limit)s;
