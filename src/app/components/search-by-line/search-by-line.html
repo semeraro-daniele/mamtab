@@ -2,7 +2,7 @@
   <app-navbar (search)="searchLine($event)" />
 
   <!-- Selezione linea / ricerche recenti -->
-  @if (!searchPerformed && !loading) {
+  @if (!searchPerformed && !isLoading) {
   <div class="mt-5">
 
     <!-- Ricerche recenti -->
@@ -71,7 +71,7 @@
   }
 
   <!-- Loading risultati linea -->
-  @if (loading) {
+  @if (isLoading) {
   <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
     @for (_ of [1,2,4]; track $index) {
     <div class="card-sm">
@@ -87,7 +87,7 @@
   }
 
   <!-- Risultati linea -->
-  @if (!loading && line) {
+  @if (!isLoading && line) {
 
   <!-- Header linea -->
   <div class="mt-5 mb-4 flex items-center gap-3">
@@ -180,7 +180,7 @@
   }
 
   <!-- Nessun risultato -->
-  @if (!loading && searchPerformed && !line) {
+  @if (!isLoading && searchPerformed && !line) {
   <div class="empty-state">
     <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"

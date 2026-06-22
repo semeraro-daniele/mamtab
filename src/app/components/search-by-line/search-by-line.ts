@@ -24,7 +24,7 @@ import { LanguageService } from '../../services/language.service';
 export class SearchByLine implements OnInit {
   line: LineResponse | null = null;
   searchPerformed = false;
-  loading = false;
+  isLoading = false;
 
   activeDirection: number = 0;
 
@@ -149,7 +149,7 @@ export class SearchByLine implements OnInit {
   }
 
   performSearch(lineId: string, routeLongName?: string) {
-    this.loading = true;
+    this.isLoading = true;
     this.line = null;
     this.searchPerformed = true;
 
@@ -169,20 +169,20 @@ export class SearchByLine implements OnInit {
         if (!res || res.risultati === 0 || !res.directions || res.directions.length === 0) {
           this.line = null;
           this.searchPerformed = true;
-          this.loading = false;
+          this.isLoading = false;
           return;
         }
 
         this.line = res;
         this.activeDirection = res.directions[0]?.direction_id ?? 0;
         this.searchPerformed = true;
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
         this.line = null;
         this.searchPerformed = true;
-        this.loading = false;
+        this.isLoading = false;
       },
     });
   }

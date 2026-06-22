@@ -14,7 +14,7 @@ import { LanguageService } from '../../services/language.service';
 })
 export class NearbyStops implements OnInit {
   stops: NearbyStop[] = [];
-  loading: boolean = false;
+  isLoading: boolean = false;
   error: string | null = null;
   userLat: number | null = null;
   userLon: number | null = null;
@@ -51,7 +51,7 @@ export class NearbyStops implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.isLoading = true;
     this.error = null;
 
     navigator.geolocation.getCurrentPosition(
@@ -61,7 +61,7 @@ export class NearbyStops implements OnInit {
         this.loadNearbyStops();
       },
       (error) => {
-        this.loading = false;
+        this.isLoading = false;
         switch (error.code) {
           case error.PERMISSION_DENIED:
             this.error = 'nearby.permissionDenied';
@@ -89,13 +89,13 @@ export class NearbyStops implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.isLoading = true;
     this.error = null;
 
     this.stopService.getNearby(this.userLat, this.userLon, this.radius).subscribe({
       next: (response) => {
         this.stops = response.stops;
-        this.loading = false;
+        this.isLoading = false;
         if (this.stops.length === 0) {
           this.error = 'nearby.noStopsFound';
         }
@@ -103,7 +103,7 @@ export class NearbyStops implements OnInit {
       error: (err) => {
         console.error('Error loading nearby stops:', err);
         this.error = 'nearby.loadError';
-        this.loading = false;
+        this.isLoading = false;
       }
     });
   }

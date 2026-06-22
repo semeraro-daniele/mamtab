@@ -18,7 +18,7 @@ import { LanguageService } from '../../services/language.service';
 export class SearchByStop implements OnInit {
   stops: Stop[] = [];
   searchPerformed: boolean = false;
-  loading: boolean = false;
+  isLoading: boolean = false;
   expandedStops: Set<string> = new Set();
   showScrollButton: boolean = false;
 
@@ -80,7 +80,7 @@ export class SearchByStop implements OnInit {
   }
 
   performSearch(stopId: string) {
-    this.loading = true;
+    this.isLoading = true;
     this.stops = [];
     this.searchPerformed = true;
     this.visibleDeparturesPerStop.clear();
@@ -95,7 +95,7 @@ export class SearchByStop implements OnInit {
           this.visibleDeparturesPerStop.set(stop.stop_id, this.departuresPerPage);
         });
 
-        this.loading = false;
+        this.isLoading = false;
 
         if (res.stops.length > 0) {
           const firstStop = res.stops[0];
@@ -114,7 +114,7 @@ export class SearchByStop implements OnInit {
       error: (err) => {
         console.error(err);
         this.stops = [];
-        this.loading = false;
+        this.isLoading = false;
       },
     });
   }

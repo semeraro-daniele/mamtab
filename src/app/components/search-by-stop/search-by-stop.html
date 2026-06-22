@@ -2,7 +2,7 @@
   <app-navbar (search)="searchStop($event)" />
 
   <!-- Ricerche recenti -->
-  @if (!searchPerformed && !loading && recentSearches.length > 0) {
+  @if (!searchPerformed && !isLoading && recentSearches.length > 0) {
   <div class="mt-5">
     <div class="flex items-center justify-between mb-3">
       <h2 class="section-label">{{ 'search.recentSearches' | translate }}</h2>
@@ -33,7 +33,7 @@
   }
 
   <!-- Loading skeleton -->
-  @if (loading) {
+  @if (isLoading) {
   <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     @for (_ of [1,2,3]; track $index) {
     <div class="card">
@@ -49,7 +49,7 @@
   }
 
   <!-- Risultati -->
-  @if (!loading && stops.length > 0) {
+  @if (!isLoading && stops.length > 0) {
   <div class="grid gap-4 mt-5 sm:grid-cols-2 lg:grid-cols-3">
     @for (stop of stops; track stop.stop_id) {
     <div class="card">
@@ -153,7 +153,7 @@
   }
 
   <!-- Nessun risultato -->
-  @if (!loading && searchPerformed && stops.length === 0) {
+  @if (!isLoading && searchPerformed && stops.length === 0) {
   <div class="empty-state">
     <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"

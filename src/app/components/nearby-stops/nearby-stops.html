@@ -12,8 +12,8 @@
   @if (geolocationSupported && userLat === null) {
   <div class="text-center mb-8">
     <p class="mb-4 text-secondary-var">{{ 'nearby.description' | translate }}</p>
-    <button (click)="requestLocation()" [disabled]="loading" class="btn-primary">
-      @if (loading) {
+    <button (click)="requestLocation()" [disabled]="isLoading" class="btn-primary">
+      @if (isLoading) {
       <span>{{ 'search.loading' | translate }}</span>
       } @else {
       <span>{{ 'nearby.getLocation' | translate }}</span>
@@ -53,7 +53,7 @@
   }
 
   <!-- Loading skeleton -->
-  @if (loading && !error) {
+  @if (isLoading && !error) {
   <div class="space-y-4">
     @for (_ of [1,2,3]; track $index) {
     <div class="card">
@@ -71,7 +71,7 @@
   }
 
   <!-- Results -->
-  @if (!loading && !error && stops.length > 0) {
+  @if (!isLoading && !error && stops.length > 0) {
   <div class="mb-4 text-center text-secondary-var">
     {{ 'nearby.foundStops' | translate: {count: stops.length} }}
   </div>
@@ -110,7 +110,7 @@
   }
 
   <!-- No results -->
-  @if (!loading && stops.length === 0 && userLat !== null && !error) {
+  @if (!isLoading && stops.length === 0 && userLat !== null && !error) {
   <div class="empty-state">
     <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
