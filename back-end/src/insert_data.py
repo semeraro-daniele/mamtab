@@ -46,7 +46,7 @@ LOAD_ORDER = [
     ("calendar_dates.txt", "calendar_dates", None),
     ("shapes.txt",         "shapes",         None),
     ("stops.txt",          "stops",          None),
-    ("trips_clean.txt",    "trips",          None),   # usa trips_clean se disponibile
+    ("trips.txt",          "trips",          None),
     ("stop_times.txt",     "stop_times",     None),
     ("transfers.txt",      "transfers",      None),
 ]
@@ -171,14 +171,8 @@ def load_all(conn, truncate: bool = True):
     for filename, table, cols in LOAD_ORDER:
         path = file_path(filename)
         if path is None:
-            # Prova senza _clean (es. trips.txt come fallback di trips_clean.txt)
-            alt = filename.replace("_clean", "")
-            path = file_path(alt)
-            if path is None:
-                log(f"⚠  {filename} non trovato in {DATA_DIR}, skip.")
-                continue
-            else:
-                log(f"ℹ  Uso {alt} al posto di {filename}")
+            log(f"⚠  {filename} non trovato in {DATA_DIR}, skip.")
+            continue
 
         t0 = time.time()
         log(f"→  Caricamento {table} da {os.path.basename(path)} …")
