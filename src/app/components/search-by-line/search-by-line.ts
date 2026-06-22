@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar';
@@ -58,6 +58,7 @@ export class SearchByLine implements OnInit {
     public searchHistoryService: SearchHistoryService,
     private route: ActivatedRoute,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -87,10 +88,12 @@ export class SearchByLine implements OnInit {
       next: (res) => {
         this.allLines = res.lines;
         this.loadingLines = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading all lines:', err);
         this.loadingLines = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -170,6 +173,7 @@ export class SearchByLine implements OnInit {
           this.line = null;
           this.searchPerformed = true;
           this.isLoading = false;
+          this.cdr.detectChanges();
           return;
         }
 
@@ -177,12 +181,14 @@ export class SearchByLine implements OnInit {
         this.activeDirection = res.directions[0]?.direction_id ?? 0;
         this.searchPerformed = true;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
         this.line = null;
         this.searchPerformed = true;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -223,10 +229,12 @@ export class SearchByLine implements OnInit {
         next: (res) => {
           this.stopDepartures = res;
           this.modalLoading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error loading stop departures:', err);
           this.modalLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

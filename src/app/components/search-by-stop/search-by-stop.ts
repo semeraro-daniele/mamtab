@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
 import { Stop, Departure } from '../../models/stop';
@@ -35,7 +35,8 @@ export class SearchByStop implements OnInit {
     private stopService: StopService,
     public searchHistoryService: SearchHistoryService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -96,6 +97,7 @@ export class SearchByStop implements OnInit {
         });
 
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         if (res.stops.length > 0) {
           const firstStop = res.stops[0];
@@ -115,6 +117,7 @@ export class SearchByStop implements OnInit {
         console.error(err);
         this.stops = [];
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
