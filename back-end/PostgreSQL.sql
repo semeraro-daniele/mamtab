@@ -12,7 +12,7 @@
 -- DROP TABLE IF EXISTS feed_info CASCADE;
 -- DROP TABLE IF EXISTS agency CASCADE;
 
-CREATE DATABASE gtfs_db OWNER mamtab;
+CREATE DATABASE gtfs_db;
 
 -- AGENCY
 CREATE TABLE IF NOT EXISTS agency (
@@ -187,36 +187,3 @@ ORDER BY r.route_sort_order;
 \COPY transfers      FROM 'transfers.txt'       CSV HEADER;
 */
 
--- PERMESSI E OWNER
-
--- Imposta mamtab come owner dello schema public
-ALTER SCHEMA public OWNER TO mamtab;
-
--- Imposta mamtab come owner del database
-ALTER DATABASE gtfs_db OWNER TO mamtab;
-
--- Cambia owner di tutte le tabelle esistenti
-DO $$
-DECLARE r RECORD;
-BEGIN
-    FOR r IN SELECT tablename FROM pg_tables WHERE schemaname='public' LOOP
-        EXECUTE 'ALTER TABLE public.' || quote_ident(r.tablename) || ' OWNER TO mamtab';
-    END LOOP;
-END $$;
-
--- Cambia owner di tutte le viste
-DO $$
-DECLARE r RECORD;
-BEGIN
-    FOR r IN SELECT viewname FROM pg_views WHERE schemaname='public' LOOP
-        EXECUTE 'ALTER VIEW public.' || quote_ident(r.viewname) || ' OWNER TO mamtab';
-    END LOOP;
-END $$;
-
--- Permessi completi a mamtab
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO mamtab;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO mamtab;
-GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO mamtab;
-
--- Permessi per future tabelle
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO mamtab;

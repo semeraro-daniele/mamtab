@@ -3,8 +3,8 @@ info:
   title: GTFS Departures API
   description: >
     API per consultare fermate, linee e orari di partenza GTFS (Amtab).
-    Permette la ricerca per fermata, linea e direzione.
-  version: 2.0.0
+    Permette la ricerca per fermata, linea, direzione e fermate vicine.
+  version: 2.1.0
 
 servers:
   - url: http://localhost:8000/api
@@ -39,6 +39,46 @@ paths:
                 $ref: "#/components/schemas/StopsResponse"
         "400":
           description: Query non valida
+        "500":
+          description: Errore interno
+
+  /stops/nearby:
+    get:
+      tags: [Stops]
+      summary: Fermate vicine a coordinate geografiche
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Latitudine in gradi decimali
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Longitudine in gradi decimali
+        - name: radius
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 500
+            minimum: 1
+            maximum: 5000
+          description: Raggio di ricerca in metri
+      responses:
+        "200":
+          description: Elenco fermate vicine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NearbyStopsResponse"
+        "400":
+          description: Parametri geografici non validi
         "500":
           description: Errore interno
 
@@ -166,7 +206,14 @@ paths:
 components:
   schemas:
 
-    # ==== STOPS ====
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+
+    # STOPS
 
     Departure:
       type: object
@@ -228,7 +275,7 @@ components:
           items:
             $ref: "#/components/schemas/Stop"
 
-    # ==== LINES ====
+    # LINES
 
     LineDeparture:
       type: object
@@ -360,3 +407,43 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/LineInfo"
+
+    # NEARBY STOPS
+
+    NearbyStop:
+      type: object
+      properties:
+        stop_id:
+          type: string
+        stop_name:
+          type: string
+        stop_code:
+          type: string
+          nullable: true
+        stop_lat:
+          type: number
+          format: double
+        stop_lon:
+          type: number
+          format: double
+        distance:
+          type: number
+          format: double
+
+    NearbyStopsResponse:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+        radius:
+          type: integer
+        risultati:
+          type: integer
+        stops:
+          type: array
+          items:
+            $ref: "#/components/schemas/NearbyStop"

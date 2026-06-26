@@ -1,121 +1,105 @@
 # Creazione e popolamento del database PostgreSQL (backend Mamtab)
 
-Questo file descrive tutti i passaggi per creare il database, importare lo schema, configurare le variabili d'ambiente e caricare i file GTFS forniti in `back-end/gtfs_data`.
+Questo progetto usa un unico punto centralizzato per inizializzare PostgreSQL: [`setup_db.py`](src/setup_db.py). Lo script crea il database se manca e applica lo schema da [`PostgreSQL.sql`](PostgreSQL.sql), usando solo l'utente admin configurato nel file ambiente.
 
 ## Prerequisiti
-- PostgreSQL installato e in esecuzione (hai già eseguito i comandi di installazione).
-- Accesso alla cartella del progetto (es. `/home/utente/mamtab` o la cartella sul server).
+- PostgreSQL installato e in esecuzione.
+- File GTFS presenti in [`gtfs_data`](gtfs_data).
 
 ---
 
-## 1) Installazione PostegreSQL
+## 1) Configurare le variabili d'ambiente
+Copia [`src/.env.example`](src/.env.example) in [`src/.env`](src/.env) e modifica i valori se necessario.
 
 ```bash
-sudo apt update
-sudo apt install -y postgresql postgresql-contrib python3-venv python3-pip
-sudo systemctl enable --now postgresql
-```
-
-## 2) Crea utente e database
-
-```bash
-# come utente root/postgres
-sudo -u postgres psql -c "CREATE USER mamtab WITH PASSWORD 'root';"
-
-# VIENE FATTO NELLO SCRIPT SQL
-sudo -u postgres psql -c "CREATE DATABASE gtfs_db OWNER mamtab;"
-```
-
----
-
-## 2) Importare lo schema SQL
-
-```bash
-sudo -u postgres psql -d gtfs_db -f PostgreSQL.sql
-```
-
----
-
-## 3) Configurare le variabili d'ambiente
-Nel backend c'è un file di esempio: `back-end/src/.env.example`.
-
-```bash
-cd src
+cd back-end/src
 cp .env.example .env
-# editare .env: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD
-nano .env
 ```
 
-Esempio di valori:
+Esempio:
 
-```
+```env
 DB_HOST=localhost
 DB_NAME=gtfs_db
-DB_USER=mamtab
+DB_USER=postgres
 DB_PASSWORD=root
 ```
 
+Significato:
+- `DB_USER` / `DB_PASSWORD`: utente amministrativo usato sia dal backend sia dagli script locali.
+
 ---
 
-## 4) Creare ambiente Python e installare dipendenze
+## 2) Installare le dipendenze Python
+Da [`src`](src):
 
 ```bash
-python3 -m venv venv
+python -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Se `requirements.txt` non è aggiornato, installa almeno `psycopg2-binary pandas python-dotenv`.
+Su Windows PowerShell:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
 ---
 
-## 5) Caricare i dati GTFS
-Lo script di import è `back-end/src/insert_data.py`. Per impostazione predefinita legge i file da `back-end/gtfs_data`.
+## 3) Inizializzare PostgreSQL da un solo punto
+Da [`back-end/src`](src) esegui:
 
 ```bash
-# con venv attivo e da back-end/src
+python setup_db.py
+```
+
+Su Windows PowerShell:
+
+```powershell
+& C:/Users/DanieleSemeraro/AppData/Local/Python/bin/python.exe .\back-end\src\setup_db.py
+```
+
+Lo script [`setup_db.py`](src/setup_db.py):
+- crea il database `gtfs_db` se non esiste;
+- applica tabelle e viste definite in [`PostgreSQL.sql`](PostgreSQL.sql);
+- ignora dal file SQL le istruzioni che presuppongono l'esistenza del ruolo `mamtab`.
+
+Quindi non devi più lanciare manualmente [`PostgreSQL.sql`](PostgreSQL.sql) nella procedura standard.
+
+---
+
+## 4) Caricare i dati GTFS
+Dopo il setup:
+
+```bash
 python insert_data.py
 ```
 
-Lo script stamperà il numero di righe importate e messaggi di log; rispetta l'ordine per le FK e usa COPY per velocità.
+Lo script [`insert_data.py`](src/insert_data.py) legge i file da [`gtfs_data`](gtfs_data).
 
 ---
 
-## 6) Verifica del database
+## 5) Verifica rapida
+Elenco tabelle:
 
 ```bash
-# elenco tabelle (come superuser)
-sudo -u postgres psql -d gtfs_db -c "\dt"
-
-# contare righe nella tabella stops (usando l'utente creato)
-psql -U mamtab -h localhost -d gtfs_db -c "SELECT COUNT(*) FROM stops;"
+psql -U postgres -h localhost -d gtfs_db -c "\dt"
 ```
 
-Se ottieni errori di autenticazione con `psql -U`, assicurati che `pg_hba.conf` permetta connessioni locali con password e che il servizio sia riavviato.
-
----
-
-
-Modifica la porta o il binding se necessario (firewall/selinux).
-
----
-
-## 8) Note e troubleshooting rapido
-- Se `insert_data.py` fallisce per mancanza di dipendenze: installa `psycopg2-binary pandas python-dotenv`.
-- Se vedi errori FK: verifica l'ordine dei file GTFS e che non ci siano righe malformate.
-- Encoding: i file GTFS italiani spesso hanno BOM — lo script già gestisce `utf-8-sig`.
-- Permessi: esegui i comandi `psql` come `postgres` quando modifichi DB a basso livello.
-
-Uninstall PostgreSQL:
+Conteggio fermate:
 
 ```bash
-sudo systemctl stop postgresql
-sudo apt --purge remove postgresql\* -y
-sudo apt autoremove -y
-sudo apt autoclean
-sudo rm -rf /etc/postgresql
-sudo rm -rf /var/lib/postgresql
-sudo rm -rf /var/log/postgresql
-sudo rm -rf /usr/lib/postgresql
+psql -U postgres -h localhost -d gtfs_db -c "SELECT COUNT(*) FROM stops;"
 ```
+
+---
+
+## Note
+- Se [`setup_db.py`](src/setup_db.py) fallisce per autenticazione, controlla `DB_USER` e `DB_PASSWORD` nel `.env`.
+- [`PostgreSQL.sql`](PostgreSQL.sql) resta la sorgente dello schema, ma viene applicato tramite [`setup_db.py`](src/setup_db.py).
+- [`db.py`](src/db.py) e [`insert_data.py`](src/insert_data.py) continuano a usare `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`.
