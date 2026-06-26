@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar';
@@ -20,6 +20,7 @@ import { LanguageService } from '../../services/language.service';
   standalone: true,
   imports: [CommonModule, NavbarComponent, TranslateModule, FormsModule],
   templateUrl: './search-by-line.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SearchByLine implements OnInit {
   line: LineResponse | null = null;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
@@ -7,6 +7,7 @@ import { LanguageService } from '../../services/language.service';
   selector: 'app-list-lines',
   imports: [TranslateModule],
   templateUrl: './list-lines.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ListLines implements OnInit {
   listLines = [

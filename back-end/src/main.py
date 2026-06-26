@@ -40,6 +40,8 @@ app = FastAPI(
     title="GTFS Departures API",
     description="Prossime partenze da una fermata Amtab - cerca per stop_id, nome fermata o numero linea.",
     version="2.0.0",
+    docs_url="/docs",
+    openapi_url="/openapi.json",
 )
 
 # Basic logging configuration

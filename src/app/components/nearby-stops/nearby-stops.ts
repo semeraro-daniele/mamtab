@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { NearbyStop } from '../../models/stop';
 import { StopService } from '../../services/stop.service';
@@ -10,7 +10,8 @@ import { LanguageService } from '../../services/language.service';
   selector: 'app-nearby-stops',
   standalone: true,
   imports: [CommonModule, TranslateModule],
-  templateUrl: './nearby-stops.html'
+  templateUrl: './nearby-stops.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class NearbyStops implements OnInit {
   stops: NearbyStop[] = [];

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
@@ -11,6 +11,7 @@ import { LanguageService } from '../../services/language.service';
 ],
   selector: 'app-error-page',
   templateUrl: './error-page.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ErrorPage implements OnInit {
   constructor(

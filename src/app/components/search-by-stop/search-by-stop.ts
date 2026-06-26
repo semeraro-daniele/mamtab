@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
 import { Stop, Departure } from '../../models/stop';
@@ -13,7 +13,8 @@ import { LanguageService } from '../../services/language.service';
   selector: 'app-seach-by-stop',
   standalone: true,
   imports: [CommonModule, NavbarComponent, TranslateModule],
-  templateUrl: './search-by-stop.html'
+  templateUrl: './search-by-stop.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SearchByStop implements OnInit {
   stops: Stop[] = [];

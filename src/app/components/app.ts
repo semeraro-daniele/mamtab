@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  ViewEncapsulation,
   inject,
   signal,
 } from '@angular/core';
@@ -15,6 +16,7 @@ import { AppTheme, ThemeService } from '../services/theme.service';
   selector: 'app-root',
   imports: [RouterOutlet, RouterLink, RouterModule, TranslateModule, CommonModule],
   templateUrl: './app.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class App implements OnInit {
   protected readonly title = signal('mamtab');

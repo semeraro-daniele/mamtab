@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { LanguageService } from '../../services/language.service';
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, RouterModule],
   templateUrl: './navbar.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class NavbarComponent implements OnInit {
   /** Emette la stringa cercata quando l'utente preme Cerca */

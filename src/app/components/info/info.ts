@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
@@ -7,6 +7,7 @@ import { LanguageService } from '../../services/language.service';
   selector: 'app-info',
   imports: [TranslateModule],
   templateUrl: './info.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class Info implements OnInit {
   private clickCount = 0;

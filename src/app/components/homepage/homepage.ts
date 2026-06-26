@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -8,6 +8,7 @@ import { LanguageService } from '../../services/language.service';
   selector: 'app-homepage',
   imports: [TranslateModule],
   templateUrl: './homepage.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class Homepage implements OnInit {
   constructor(

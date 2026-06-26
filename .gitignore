@@ -43,7 +43,7 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Env
+# Backend
 back-end/src/.env
 back-end/src/__pycache__/*
 .env
