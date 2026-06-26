@@ -1,4 +1,4 @@
--- GTFS Schema per PostgreSQL
+--  GTFS — PostgreSQL schema
 
 -- RESET TABELLE
 -- DROP TABLE IF EXISTS transfers CASCADE;
