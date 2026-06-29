@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, HostListener, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from '../navbar/navbar';
+import { SearchBar } from '../../shared/search-bar/search-bar';
 import {
   LineDirection,
   LineResponse,
@@ -18,7 +18,7 @@ import { LanguageService } from '../../services/language.service';
 @Component({
   selector: 'app-search-by-line',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, TranslateModule, FormsModule],
+  imports: [CommonModule, SearchBar, TranslateModule, FormsModule],
   templateUrl: './search-by-line.html',
   encapsulation: ViewEncapsulation.None,
 })
@@ -60,7 +60,7 @@ export class SearchByLine implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.translate.use(this.languageService.getLanguage());

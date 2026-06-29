@@ -7,13 +7,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-search-bar',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, RouterModule],
-  templateUrl: './navbar.html',
+  templateUrl: './search-bar.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class NavbarComponent implements OnInit {
+export class SearchBar implements OnInit {
   /** Emette la stringa cercata quando l'utente preme Cerca */
   @Output() search = new EventEmitter<string>();
 
@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
     private languageService: LanguageService,
     private translate: TranslateService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.translate.use(this.languageService.getLanguage());

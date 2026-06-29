@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, HostListener, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from '../navbar/navbar';
+import { SearchBar } from '../../shared/search-bar/search-bar';
 import { Stop, Departure } from '../../models/stop';
 import { StopService } from '../../services/stop.service';
 import { SearchHistoryService, SearchHistoryItem } from '../../services/search-history.service';
@@ -12,7 +12,7 @@ import { LanguageService } from '../../services/language.service';
 @Component({
   selector: 'app-seach-by-stop',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, TranslateModule],
+  imports: [CommonModule, SearchBar, TranslateModule],
   templateUrl: './search-by-stop.html',
   encapsulation: ViewEncapsulation.None,
 })
@@ -38,7 +38,7 @@ export class SearchByStop implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.translate.use(this.languageService.getLanguage());
@@ -91,7 +91,7 @@ export class SearchByStop implements OnInit {
       next: (res) => {
         this.stops = res.stops;
         this.expandedStops = new Set(this.stops.map((s) => s.stop_id));
-        
+
         // Inizializza il numero di partenze visibili per ogni fermata (5 per default)
         this.stops.forEach((stop) => {
           this.visibleDeparturesPerStop.set(stop.stop_id, this.departuresPerPage);

@@ -1,69 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  inject,
-  signal,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterModule, RouterOutlet, NavigationStart } from '@angular/router';
-
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../services/language.service';
-import { AppTheme, ThemeService } from '../services/theme.service';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Navbar } from '../shared/nav-bar/nav-bar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterModule, TranslateModule, CommonModule],
+  standalone: true,
+  imports: [RouterOutlet, Navbar],
   templateUrl: './app.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class App implements OnInit {
-  protected readonly title = signal('mamtab');
-  private readonly languageService = inject(LanguageService);
-  private readonly translate = inject(TranslateService);
-  private readonly router = inject(Router);
-  private readonly themeService = inject(ThemeService);
-
-  infoMenuOpen = false;
-
-  ngOnInit(): void {
-    this.translate.use(this.languageService.getLanguage());
-
-    // Close info menu when navigating to another route
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.infoMenuOpen = false;
-      }
-    });
-  }
-
-  get currentLanguage(): string {
-    return this.languageService.getLanguage();
-  }
-
-  get currentTheme(): AppTheme {
-    return this.themeService.currentTheme();
-  }
-
-  isActive(path: string): boolean {
-    return (
-      this.router.url === path ||
-      this.router.url.startsWith(path + '/') ||
-      this.router.url.startsWith(path + '?')
-    );
-  }
-
-  toggleInfoMenu(): void {
-    this.infoMenuOpen = !this.infoMenuOpen;
-  }
-
-  changeTheme(theme: AppTheme): void {
-    this.themeService.setTheme(theme);
-  }
-
-  changeLanguage(language: string): void {
-    this.languageService.setLanguage(language);
-    this.translate.use(this.languageService.getLanguage());
-  }
-}
+export class App { }

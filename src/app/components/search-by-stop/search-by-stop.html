@@ -1,5 +1,5 @@
 <div class="pb-4 px-4">
-  <app-navbar (search)="searchStop($event)" />
+  <app-search-bar (search)="searchStop($event)" />
 
   <!-- Ricerche recenti -->
   @if (!searchPerformed && !isLoading && recentSearches.length > 0) {
