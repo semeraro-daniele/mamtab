@@ -3,49 +3,49 @@
 
 /* TEMA SCURO */
 :root {
-  /* Superfici */
-  --bg-base: #0b0a0a;
-  /* sfondo pagina (caldo, quasi nero con sottotono rosso) */
-  --bg-surface: #1a0f0f;
-  /* card, input, navbar (superficie leggermente più chiara) */
-  --bg-raised: #241313;
+  /* Superfici — neutre, quasi prive di tinta */
+  --bg-base: #0d0d0d;
+  /* sfondo pagina: nero quasi puro */
+  --bg-surface: #161616;
+  /* card, input, navbar */
+  --bg-raised: #1f1f1f;
   /* hover su surface */
-  --bg-overlay: #2e1616;
+  --bg-overlay: #2a2a2a;
   /* hover su raised, dropdown attivo */
 
-  /* Bordi */
-  --border-default: #3a2121;
+  /* Bordi — tenue sottotono rosso solo qui */
+  --border-default: #2e2020;
   /* bordi neutri */
-  --border-subtle: #271414;
+  --border-subtle: #1e1616;
   /* divisori interni */
-  --border-accent: #ff6b6b;
+  --border-accent: #ff5555;
   /* hover accent */
 
   /* Testo */
-  --text-primary: #fff5f5;
-  /* titoli, testo principale (leggermente caldo) */
-  --text-secondary: #d9bebe;
+  --text-primary: #f5f5f5;
+  /* titoli, testo principale */
+  --text-secondary: #c4c4c4;
   /* label, codici, sottotitoli */
-  --text-muted: #b9a3a3;
+  --text-muted: #8a8a8a;
   /* placeholder, info terziaria */
-  --text-disabled: #8f7a7a;
+  --text-disabled: #555555;
   /* icone empty state */
 
   /* Accent */
-  --accent: #ff4d4d;
-  /* Bari red (dark theme variant) */
-  --accent-hover: #ff2b2b;
+  --accent: #ff4040;
+  /* Bari red */
+  --accent-hover: #ff1f1f;
   /* stronger hover */
   --accent-fg: #ffffff;
   /* testo sopra accent */
 
   /* Focus */
-  --focus-ring: #ff4d4d;
+  --focus-ring: #ff4040;
 
   /* Ombre */
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 6px 24px rgba(255, 77, 77, 0.12);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 6px 24px rgba(255, 64, 64, 0.15);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.75);
 }
 
 /* TEMA CHIARO */
@@ -639,43 +639,125 @@ body.theme-light input[type="date"]::-webkit-calendar-picker-indicator {
   filter: none;
 }
 
-.bg-base-var { background-color: var(--bg-base); }
-.bg-surface-var { background-color: var(--bg-surface); }
-.bg-raised-var { background-color: var(--bg-raised); }
-.bg-overlay-var { background-color: var(--bg-overlay); }
-.nav-bg-mix { background-color: color-mix(in srgb, var(--bg-base) 95%, transparent); }
-.header-bg-mix { background-color: color-mix(in srgb, var(--bg-base) 92%, transparent); }
-.popup-surface { background-color: var(--bg-surface); }
-.border-top-default { border-top: 1px solid var(--border-default); }
-.border-b-subtle { border-bottom: 1px solid var(--border-subtle); }
-.border-default { border: 1px solid var(--border-default); }
-.handle-bg-default { background-color: var(--border-default); }
-.svg-text-secondary { color: var(--text-secondary); }
-.text-secondary-var { color: var(--text-secondary); }
-.text-muted-var { color: var(--text-muted); }
-.text-primary-var { color: var(--text-primary); }
-.text-disabled-var { color: var(--text-disabled); }
-.accent-color { color: var(--accent); }
-.accent-bg { background-color: var(--accent); color: var(--accent-fg); }
-.hover-bg-raised:hover { background-color: var(--bg-raised); }
-.hover-bg-overlay:hover { background-color: var(--bg-overlay); }
-.hover-text-secondary:hover { color: var(--text-secondary); }
-.hover-opacity-90:hover { opacity: 0.9; }
-.hover-border-accent:hover { border-color: var(--border-accent); }
+.bg-base-var {
+  background-color: var(--bg-base);
+}
 
-/* FILTER PANEL: sfondo sfumato per evidenziare la barra di ricerca delle fermate */
+.bg-surface-var {
+  background-color: var(--bg-surface);
+}
+
+.bg-raised-var {
+  background-color: var(--bg-raised);
+}
+
+.bg-overlay-var {
+  background-color: var(--bg-overlay);
+}
+
+.nav-bg-mix {
+  background-color: color-mix(in srgb, var(--bg-base) 95%, transparent);
+}
+
+.header-bg-mix {
+  background-color: color-mix(in srgb, var(--bg-base) 92%, transparent);
+}
+
+.popup-surface {
+  background-color: var(--bg-surface);
+}
+
+.border-top-default {
+  border-top: 1px solid var(--border-default);
+}
+
+.border-b-subtle {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.border-default {
+  border: 1px solid var(--border-default);
+}
+
+.handle-bg-default {
+  background-color: var(--border-default);
+}
+
+.svg-text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-secondary-var {
+  color: var(--text-secondary);
+}
+
+.text-muted-var {
+  color: var(--text-muted);
+}
+
+.text-primary-var {
+  color: var(--text-primary);
+}
+
+.text-disabled-var {
+  color: var(--text-disabled);
+}
+
+.accent-color {
+  color: var(--accent);
+}
+
+.accent-bg {
+  background-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.hover-bg-raised:hover {
+  background-color: var(--bg-raised);
+}
+
+.hover-bg-overlay:hover {
+  background-color: var(--bg-overlay);
+}
+
+.hover-text-secondary:hover {
+  color: var(--text-secondary);
+}
+
+.hover-opacity-90:hover {
+  opacity: 0.9;
+}
+
+.hover-border-accent:hover {
+  border-color: var(--border-accent);
+}
+
+/* FILTER PANEL: barra di filtro fermate */
 .filter-panel {
   display: flex;
-  justify-content: center;
-  padding: 0.5rem;
-  border-radius: 0.75rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-card);
+  align-items: center;
+  border-radius: 1rem;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-accent);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--border-accent);
+  overflow: hidden;
 }
 
 body.theme-light .filter-panel {
-  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0));
+  box-shadow: 0 4px 16px rgba(204, 0, 0, 0.15), 0 0 0 1px var(--border-accent);
 }
 
-.filter-panel .relative { width: 100%; }
+.filter-panel .relative {
+  width: 100%;
+}
+
+.filter-panel .input-field {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.filter-panel .input-field:focus {
+  box-shadow: none;
+}

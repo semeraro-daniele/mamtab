@@ -2,7 +2,7 @@
 
     <!-- Search form (visibile solo sulle pagine che lo supportano) -->
     @if (showSearch) {
-    <div class="flex-1 max-w-lg w-full">
+    <div class="flex-1 w-full">
         <form (submit)="onSearch()" class="relative w-full">
 
             <input type="text" [(ngModel)]="searchQuery" name="search" [placeholder]="searchPlaceholder | translate"
