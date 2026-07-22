@@ -72,27 +72,6 @@ WITH candidati AS (
 			FROM calendar_dates cd
 			WHERE cd.date IN (current_date, current_date - interval '1 day')
 			  AND cd.exception_type = 1
-			  AND (
-				  cd.service_id = 'GIOR'
-				  OR (
-					  cd.service_id = 'FER'
-					  AND NOT EXISTS (
-						  SELECT 1 FROM calendar_dates x
-						  WHERE x.date = current_date
-							AND x.exception_type = 1
-							AND x.service_id = 'FEST'
-					  )
-				  )
-				  OR (
-					  cd.service_id = 'FEST'
-					  AND NOT EXISTS (
-						  SELECT 1 FROM calendar_dates x
-						  WHERE x.date = current_date
-							AND x.exception_type = 1
-							AND x.service_id = 'FER'
-					  )
-				  )
-			  )
 		)
 		AND st.pickup_type != 1
 		AND (
@@ -133,27 +112,6 @@ WITH candidati AS (
 					FROM calendar_dates cd
 					WHERE cd.date = current_date - interval '1 day'
 					  AND cd.exception_type = 1
-					  AND (
-						  cd.service_id = 'GIOR'
-						  OR (
-							  cd.service_id = 'FER'
-							  AND NOT EXISTS (
-								  SELECT 1 FROM calendar_dates x
-								  WHERE x.date = current_date - interval '1 day'
-									AND x.exception_type = 1
-									AND x.service_id = 'FEST'
-							  )
-						  )
-						  OR (
-							  cd.service_id = 'FEST'
-							  AND NOT EXISTS (
-								  SELECT 1 FROM calendar_dates x
-								  WHERE x.date = current_date - interval '1 day'
-									AND x.exception_type = 1
-									AND x.service_id = 'FER'
-							  )
-						  )
-					  )
 				)
 				AND (
 					split_part(st.departure_time, ':', 1)::int * 3600 +
@@ -254,27 +212,6 @@ WHERE
 		FROM calendar_dates cd
 		WHERE cd.date = current_date
 		  AND cd.exception_type = 1
-		  AND (
-			  cd.service_id = 'GIOR'
-			  OR (
-				  cd.service_id = 'FER'
-				  AND NOT EXISTS (
-					  SELECT 1 FROM calendar_dates x
-					  WHERE x.date = current_date
-						AND x.exception_type = 1
-						AND x.service_id = 'FEST'
-				  )
-			  )
-			  OR (
-				  cd.service_id = 'FEST'
-				  AND NOT EXISTS (
-					  SELECT 1 FROM calendar_dates x
-					  WHERE x.date = current_date
-						AND x.exception_type = 1
-						AND x.service_id = 'FER'
-				  )
-			  )
-		  )
 	)
 	AND (
 		split_part(st.departure_time, ':', 1)::int * 3600 +
@@ -382,27 +319,6 @@ WHERE
 		FROM calendar_dates cd
 		WHERE cd.date = COALESCE(%(target_date)s::date, current_date)
 		  AND cd.exception_type = 1
-		  AND (
-			  cd.service_id = 'GIOR'
-			  OR (
-				  cd.service_id = 'FER'
-				  AND NOT EXISTS (
-					  SELECT 1 FROM calendar_dates x
-					  WHERE x.date = COALESCE(%(target_date)s::date, current_date)
-						AND x.exception_type = 1
-						AND x.service_id = 'FEST'
-				  )
-			  )
-			  OR (
-				  cd.service_id = 'FEST'
-				  AND NOT EXISTS (
-					  SELECT 1 FROM calendar_dates x
-					  WHERE x.date = COALESCE(%(target_date)s::date, current_date)
-						AND x.exception_type = 1
-						AND x.service_id = 'FER'
-				  )
-			  )
-		  )
 	)
 	AND st.pickup_type != 1
 	
