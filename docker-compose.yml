@@ -26,9 +26,9 @@ services:
       context: ./mamtab-backend
     environment:
       DB_HOST: db
-      DB_NAME: ${DB_NAME:-gtfs_db}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-mamtab_db}
+      DB_USER: ${DB_USER:-mamtab}
+      DB_PASSWORD: ${DB_PASSWORD:-mamtab}
       ENV: production
     depends_on:
       db:
@@ -39,9 +39,9 @@ services:
     container_name: mamtab-db
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: ${DB_NAME:-gtfs_db}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-mamtab_db}
+      POSTGRES_USER: ${DB_USER:-mamtab}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mamtab}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:

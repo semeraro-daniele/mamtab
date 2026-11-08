@@ -22,9 +22,9 @@ Esempio:
 
 ```env
 DB_HOST=localhost
-DB_NAME=gtfs_db
-DB_USER=postgres
-DB_PASSWORD=root
+DB_NAME=mamtab_db
+DB_USER=mamtab
+DB_PASSWORD=mamtab
 ```
 
 Significato:
@@ -67,7 +67,7 @@ Su Windows PowerShell:
 ```
 
 Lo script [`setup_db.py`](src/setup_db.py):
-- crea il database `gtfs_db` se non esiste;
+- crea il database `mamtab_db` se non esiste;
 - applica tabelle e viste definite in [`PostgreSQL.sql`](PostgreSQL.sql);
 - ignora dal file SQL le istruzioni che presuppongono l'esistenza del ruolo `mamtab`.
 
@@ -90,13 +90,13 @@ Lo script [`insert_data.py`](src/insert_data.py) legge i file da [`gtfs_data`](g
 Elenco tabelle:
 
 ```bash
-psql -U postgres -h localhost -d gtfs_db -c "\dt"
+psql -U mamtab -h localhost -d mamtab_db -c "\dt"
 ```
 
 Conteggio fermate:
 
 ```bash
-psql -U postgres -h localhost -d gtfs_db -c "SELECT COUNT(*) FROM stops;"
+psql -U mamtab -h localhost -d mamtab_db -c "SELECT COUNT(*) FROM stops;"
 ```
 
 ---

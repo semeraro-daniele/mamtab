@@ -10,9 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = BASE_DIR.parent / 'PostgreSQL.sql'
 
 DB_HOST = os.environ.get('DB_HOST', 'localhost')
-DB_NAME = os.environ.get('DB_NAME', 'gtfs_db')
-DB_USER = os.environ.get('DB_USER', 'postgres')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', 'root')
+DB_NAME = os.environ.get('DB_NAME', 'mamtab_db')
+DB_USER = os.environ.get('DB_USER', 'mamtab')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'mamtab')
 
 
 class SetupError(RuntimeError):
@@ -85,7 +85,7 @@ def ensure_database(admin_conn):
 def normalize_schema_script(script: str) -> str:
 	lines = []
 	for line in script.splitlines():
-		if line.strip() == 'CREATE DATABASE gtfs_db;':
+		if line.strip().upper().startswith('CREATE DATABASE'):
 			continue
 		lines.append(line)
 	return '\n'.join(lines)
@@ -126,7 +126,7 @@ def main():
 
 	with psycopg2.connect(
 		host=DB_HOST,
-		database=DB_USER,
+		database='postgres',
 		user=DB_USER,
 		password=DB_PASSWORD,
 	) as admin_conn:
