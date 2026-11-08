@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS stops (
     stop_id TEXT PRIMARY KEY,
     stop_code TEXT,
     stop_name TEXT,
+    tts_stop_name TEXT,
     stop_desc TEXT,
     stop_lat DOUBLE PRECISION,
     stop_lon DOUBLE PRECISION,
@@ -99,7 +100,8 @@ CREATE TABLE IF NOT EXISTS stops (
     stop_timezone TEXT,
     wheelchair_boarding INTEGER DEFAULT 0,
     level_id TEXT,
-    platform_code TEXT
+    platform_code TEXT,
+    stop_access TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_stops_latlon ON stops(stop_lat, stop_lon);
@@ -186,4 +188,3 @@ ORDER BY r.route_sort_order;
 \COPY stop_times     FROM 'stop_times.txt'      CSV HEADER;
 \COPY transfers      FROM 'transfers.txt'       CSV HEADER;
 */
-
