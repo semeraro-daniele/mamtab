@@ -7,49 +7,58 @@ Caratteristiche principali:
 - Ricerca per linea e per fermata
 - Visualizzazione orari e sequenza delle corse
 - Backend Python per importare e interrogare i file GTFS
-- Dataset GTFS incluso in `back-end/gtfs_data`
+- Dataset GTFS incluso in `mamtab-backend/gtfs_data`
 
-Struttura del progetto:
-- Frontend: Applicazione Angular moderna (codice in `src/`)
-- Backend: Script Python per import dei GTFS e query (cartella `back-end/src/`)
-- Dati GTFS: `back-end/gtfs_data/` (agency.txt, stops.txt, trips.txt, ecc.)
+## Struttura del progetto
 
-Installazione e sviluppo
-
-1) Avviare il frontend (Angular)
-
-```bash
-# dalla root del progetto
-ng serve
+```
+mamtab/
+├── docker-compose.yml     # web (nginx + Angular) + api (FastAPI) + db (PostgreSQL)
+├── .env.example           # WEB_PORT e credenziali DB -> copiare in .env
+├── mamtab-frontend/       # Angular (src/), Dockerfile, nginx.conf
+└── mamtab-backend/        # FastAPI (src/), PostgreSQL.sql, gtfs_data/, Dockerfile
 ```
 
-L'app sarà disponibile su http://localhost:4200/ e ricaricherà automaticamente le modifiche.
-
-2) Avviare il backend (Python)
+## Avvio con Docker
 
 ```bash
-# dalla root del progetto
-python -m back-end.src.main
+cp .env.example .env
+docker compose up -d --build
 ```
-```bash
-# dalla folder del progetto
-uvicorn main:app --reload
-```
-Nota: il backend importa e usa i file GTFS presenti in `back-end/gtfs_data/`.
 
-Esempio rapido
+Al primo avvio il backend crea lo schema e importa i dati GTFS: ci può volere qualche minuto, soprattutto su Raspberry.
+L'app è disponibile su `http://<host>:<WEB_PORT>`.
+
+Per reimportare i dati GTFS dopo averli aggiornati:
+
+```bash
+docker compose up -d --build api
+docker compose exec api python insert_data.py
+```
+
+## Sviluppo locale
+
+1) Frontend (Angular)
+
+```bash
+cd mamtab-frontend
+npm install
+npm start          # http://localhost:4200
+```
+
+2) Backend (Python): vedi [mamtab-backend/DB_SETUP.md](mamtab-backend/DB_SETUP.md) per il database, poi
+
+```bash
+cd mamtab-backend/src
+uvicorn main:app --reload --port 8000
+```
+
+## Esempio rapido
 - Per esplorare le corse di una linea: usare la sezione "Search by line" nell'interfaccia.
 - Per cercare una fermata: usare "Search by stop" e visualizzare gli orari associati.
 
-Contribuire
+## Contribuire
 - Segnalazioni di bug e richieste di funzionalità sono benvenute. Aprire una issue o una pull request.
 
-File utili
-- Dati GTFS: `back-end/gtfs_data/`
-- Backend Python: `back-end/src/`
-- Frontend Angular: `src/`
-
-Licenza
+## Licenza
 - Non ancora definita!
-
----

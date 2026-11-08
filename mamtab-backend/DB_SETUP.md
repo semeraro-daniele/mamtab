@@ -1,5 +1,7 @@
 # Creazione e popolamento del database PostgreSQL (backend Mamtab)
 
+> **Con Docker non serve nulla di tutto questo:** `docker compose up -d --build` dalla root crea il DB, applica lo schema e importa i GTFS al primo avvio. Questa guida vale solo per lo sviluppo locale senza Docker.
+
 Questo progetto usa un unico punto centralizzato per inizializzare PostgreSQL: [`setup_db.py`](src/setup_db.py). Lo script crea il database se manca e applica lo schema da [`PostgreSQL.sql`](PostgreSQL.sql), usando solo l'utente admin configurato nel file ambiente.
 
 ## Prerequisiti
@@ -9,10 +11,10 @@ Questo progetto usa un unico punto centralizzato per inizializzare PostgreSQL: [
 ---
 
 ## 1) Configurare le variabili d'ambiente
-Copia [`src/.env.example`](src/.env.example) in [`src/.env`](src/.env) e modifica i valori se necessario.
+Copia [`.env.example`](.env.example) in `.env` (nella cartella `mamtab-backend`) e modifica i valori se necessario.
 
 ```bash
-cd back-end/src
+cd mamtab-backend
 cp .env.example .env
 ```
 
@@ -52,7 +54,7 @@ pip install -r requirements.txt
 ---
 
 ## 3) Inizializzare PostgreSQL da un solo punto
-Da [`back-end/src`](src) esegui:
+Da [`mamtab-backend/src`](src) esegui:
 
 ```bash
 python setup_db.py

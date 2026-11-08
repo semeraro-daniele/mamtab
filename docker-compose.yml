@@ -1,0 +1,55 @@
+# Stack Mamtab: Angular (nginx) + API FastAPI + PostgreSQL.
+#
+#   cp .env.example .env
+#   docker compose up -d --build
+#
+# Al primo avvio il backend crea lo schema e importa i dati GTFS.
+# Unica porta esposta: quella di "web" (WEB_PORT). Il DB non è raggiungibile dall'host.
+
+name: mamtab
+
+services:
+  web:
+    container_name: mamtab-web
+    build:
+      context: ./mamtab-frontend
+    ports:
+      - "${WEB_PORT:-80}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    container_name: mamtab-backend
+    build:
+      context: ./mamtab-backend
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:-gtfs_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    container_name: mamtab-db
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-gtfs_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  pgdata:
