@@ -15,7 +15,8 @@ import psycopg2
 from io import StringIO
 from dotenv import load_dotenv
 
-load_dotenv()
+# Unico .env, nella root del progetto (accanto a docker-compose.yml)
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".env"))
 
 # Configurazione
 REQUIRED_ENV = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD"]

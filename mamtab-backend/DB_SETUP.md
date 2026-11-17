@@ -11,11 +11,10 @@ Questo progetto usa un unico punto centralizzato per inizializzare PostgreSQL: [
 ---
 
 ## 1) Configurare le variabili d'ambiente
-Copia [`.env.example`](.env.example) in `.env` (nella cartella `mamtab-backend`) e modifica i valori se necessario.
+Copia [`.env.example`](../.env.example) in `.env` (nella **root del progetto**, unico file condiviso con Docker Compose) e modifica i valori se necessario.
 
 ```bash
-cd mamtab-backend
-cp .env.example .env
+cp .env.example .env   # dalla root del progetto
 ```
 
 Esempio:

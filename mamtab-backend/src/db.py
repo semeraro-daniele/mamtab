@@ -8,7 +8,8 @@ from fastapi import HTTPException
 
 import queries
 
-load_dotenv()
+# Unico .env, nella root del progetto (accanto a docker-compose.yml)
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".env"))
 
 REQUIRED_ENV = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD"]
 missing = [k for k in REQUIRED_ENV if not os.environ.get(k)]

@@ -4,7 +4,8 @@ from pathlib import Path
 import psycopg2
 from dotenv import load_dotenv
 
-load_dotenv()
+# Unico .env, nella root del progetto (accanto a docker-compose.yml)
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".env"))
 
 BASE_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = BASE_DIR.parent / 'PostgreSQL.sql'

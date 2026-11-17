@@ -14,7 +14,7 @@ Caratteristiche principali:
 ```
 mamtab/
 ├── docker-compose.yml     # web (nginx + Angular) + api (FastAPI) + db (PostgreSQL)
-├── .env.example           # WEB_PORT e credenziali DB -> copiare in .env
+├── .env.example           # unico .env: WEB_PORT, credenziali DB -> copiare in .env
 ├── mamtab-frontend/       # Angular (src/), Dockerfile, nginx.conf
 └── mamtab-backend/        # FastAPI (src/), PostgreSQL.sql, gtfs_data/, Dockerfile
 ```

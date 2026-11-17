@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/api'
+  // In sviluppo ng serve inoltra /api/ al backend su http://localhost:8000 (proxy.conf.mjs)
+  apiUrl: '/api'
 };
